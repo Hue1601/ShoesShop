@@ -1,0 +1,357 @@
+/*Login*/
+.container {
+    width: 40% !important;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    margin-top: 55px;
+}
+.router-login{
+    text-align: end;
+    margin-bottom: 5px;
+    color: black
+}
+.text-login-google{
+    margin: 30px;
+}
+
+.icon-google{
+    width:15px;
+    height:15px;
+}
+
+/*header*/
+.header{
+    padding-right: 0 !important;
+    background-color: oklch(0.837 0.128 66.29)!important;
+}
+.icon-header{
+    width: 25px;
+    height: 25px;
+    margin:0 10px;
+}
+.header-item{
+    display: flex;
+    flex-grow: 1 ;
+    justify-content: center;
+}
+.shop-name{
+    margin-left: 18px;
+    font-size: xx-large;
+    font-weight: 500;
+}
+/*footer*/
+.footer-wrap{
+    font-size: 13px;
+    color: black
+}
+/*home page*/
+.img-product{
+    width: 250px;
+    height: 250px;
+}
+.brand-product{
+    font-weight: 600;
+    margin-top: 5px;
+}
+.brand-name{
+    font-size: smaller;
+    color:gray;
+    padding: 5px 0;
+}
+/*list brand*/
+.list-brand{
+    display: flex !important;
+    flex-wrap: wrap !important;
+    box-shadow: none !important;
+}
+.logo-brand{
+    width: 197px;
+    height: 99px;
+}
+
+/*cart*/
+.cart-container{
+    display: flex;
+    width: 100%
+}
+.list-product{
+    flex-grow: 1;
+}
+.product-cart{
+    display: flex;
+    height:145px;
+    margin-top: 10px;
+    border-bottom: 1px solid #b8b8b8
+}
+.total{
+    width: 32%;
+    text-align: center;
+    border: 1px solid #c6c0c0;
+    height: 320px;
+    padding: 10px;
+    margin-left: 10px;
+}
+.right-text{
+    font-weight: bold;
+    text-align: start;
+    margin-right: 5px;
+}
+.left-text{
+    font-size: x-small;
+    color: gray;
+    font-weight: 600;
+    text-align: end;
+}
+.row{
+    height: 75px;
+    align-content: center;
+}
+.notice{
+    font-weight: bold;
+    color: red;
+    font-size: smaller;
+    margin-top: 10px
+}
+.quantity {
+    max-width: 90px !important;
+    height: 20px !important;
+    margin: 0 10px;
+}
+
+.text-trash{
+    margin-top: 10px;
+    font-size: 12px;
+    text-align: end;
+    color: #ae0303;
+    text-decoration: underline;;
+}
+.img-product-cart{
+    width: 125px;
+    height: 125px;
+    margin-right: 10px;
+}
+.name-product-cart{
+    font-weight: bold;
+    color: gray;
+    font-size: 14px;
+}
+.product-price{
+    font-weight: bold;
+    font-size: 13px;
+}
+.brand{
+    font-size:13px;
+    font-weight: 500
+}
+.product-info{
+    flex-grow: 1;
+    max-width: 367px;
+}
+.total-price{
+    font-weight: bold;
+    text-align: end
+}
+/*Site bar*/
+.custom-select {
+    height: 40px;
+    width: 255px;
+    background: #f1f1f1;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    justify-content: space-between;
+}
+
+/*list product*/
+.list-product{
+    margin-left: 30px;
+    flex-grow: 1;
+}
+.text-arrange{
+    text-align: end;
+    margin-top: 10px;
+    color: black;
+    font-size: 14px;
+}
+.list-arrange{
+    position: absolute !important;
+    z-index: 1;
+    right: 5%;
+    width: 205px;
+    border: 1px solid #cecdcd !important;
+}
+
+/*product detail*/
+.img-product-detail{
+    width: 800px;
+    height: 800px;
+    max-width: 800px;
+}
+.list-img-detail{
+    width: 100px;
+    height: 100px;
+}
+
+.product-price-detail{
+    display: flex;
+    font-size: 19px;
+    margin: 15px 0 30px  ;
+}
+.origin-price{
+    text-decoration: line-through;
+    margin: 0 10px;
+}
+.discount-price{
+    color: #bc0000;
+    margin-right: 4px;
+    font-weight: bold;
+}
+.product-discount-badge{
+    font-size: 15px;
+    color: white;
+    background-color: #a82200;
+    font-weight: bold;
+    border: none;
+    padding: 2px 5px 2px 5px;
+    width: 53px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.btn-color{
+    box-shadow: none !important;
+    height: fit-content !important;
+    max-width: 60px !important;
+}
+.list-color-product{
+    width: 60px;
+    height: 60px;
+}
+.btn-size{
+    box-shadow: none !important;
+    border: 1px solid !important;
+    margin: 10px 10px 0 0;
+}
+.size{
+    align-items: center;
+    display: flex;
+    margin-top: 15px;
+}
+.size-guide{
+    color: black;
+    font-size: 13px;
+    text-decoration: underline;
+    margin-left: 5px
+}
+.icon-product-detail{
+    width: 20px;
+    height: 20px;
+}
+.product-promotion-wrapper{
+    border: 1px solid gray !important;
+    padding: 10px;
+    margin-top: 40px
+}
+
+.show-img-modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8) !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+.large-img{
+    width: 650px;
+    height: 650px;
+}
+.icon-close{
+    position: absolute;
+    margin: 15px 0 0 15px;
+}
+.display-quantity{
+    display: flex;
+    height: 55px
+}
+.btn-action-detail{
+    margin-top: 20px !important;
+    font-weight: bold
+}
+.discription{
+    width: 60%;
+    padding: 10px;
+}
+.related-product{
+    width: 100%;
+    text-align: center
+}
+.product-description{
+  text-decoration: none;
+    text-align: center;
+    width: 100%
+}
+/*payment*/
+.input-location{
+    display: flex;
+    margin: 10px 0
+}
+.wrap-div{
+    display: flex;
+    justify-content: space-between;
+    margin: 15px 0;
+}
+.product-info-payment{
+    display: flex;
+    margin-bottom: 10px;
+}
+.img-product-payment{
+   width: 70px;
+    height: 70px;
+    border-radius: 8px;
+    border: 1px solid #cecdcd;
+}
+.order-summary{
+    width:59%;
+    margin: 0 10px
+}
+.product-quantity{
+    text-align: end;
+}
+.summary-order-product{
+    max-height: 521px;
+    overflow-y: auto;
+    background: aliceblue;
+    height: fit-content;
+    min-height: 100px;
+}
+.show-info-order{
+    border-left: 1px solid #cbc9c9;
+    background: #faf8f8;
+    max-height: 735px
+}
+/*common*/
+.btn{
+    color: #181818 !important;
+    background-color: oklch(0.837 0.128 66.29) !important;
+    width: 100%;
+}
+.text{
+    color: black !important;
+}
+.bold-text{
+    font-weight: bold;
+}
+.box-shadow{
+    box-shadow: none !important;
+}
+
+

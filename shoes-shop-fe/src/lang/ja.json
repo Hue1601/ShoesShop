@@ -1,0 +1,25 @@
+{
+  "header": {
+    "shop-name": "Shoes shop",
+    "home": "Trang chủ",
+    "product": "Sản phẩm",
+    "brand": "Thương hiệu",
+    "introduce": "Giới thiệu"
+  },
+  "login": {
+    "username": "Vui lòng nhập username"
+  },
+  "home-page": {
+    "new-product": "SẢN PHẨM MỚI",
+    "best-selling-product": "SẢN PHẨM BÁN CHẠY"
+  },
+  "cart": {
+    "cart": "Giỏ hàng",
+    "delete": "Xóa",
+    "into-money": "Thành tiền",
+    "btn-payment": "Thanh toán",
+    "note": "*Phí ship và coupon áp dụng tại trang thanh toán",
+    "shipping-fee": "Phí vận chuyển",
+    "shipping-note": "Phí ship được tính ở trang thanh toán"
+  }
+}
