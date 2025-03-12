@@ -9,7 +9,7 @@ CREATE TABLE Users (
     Password NVARCHAR(255) NOT NULL,
     PhoneNumber NVARCHAR(15) UNIQUE NOT NULL,
     Email NVARCHAR(100) UNIQUE NOT NULL,
-    IsGoogleLogin BIT DEFAULT 0, -- Đăng nhập bằng Google
+    GoogleLogin BIT DEFAULT 0, -- Đăng nhập bằng Google
     CreatedAt DATETIME DEFAULT GETDATE()
 );
 CREATE TABLE Brands (
@@ -61,7 +61,7 @@ CREATE TABLE Orders (
     CreatedAt DATETIME DEFAULT GETDATE()
 );
 CREATE TABLE OrderDetails (
-    OrderDetailID INT IDENTITY(1,1) PRIMARY KEY,
+	ID INT IDENTITY(1,1) PRIMARY KEY,
     OrderID INT FOREIGN KEY REFERENCES Orders(ID) ,
     ProductID INT FOREIGN KEY REFERENCES Products(ID),
     Quantity INT NOT NULL,

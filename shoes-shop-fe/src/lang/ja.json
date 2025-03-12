@@ -7,7 +7,10 @@
     "introduce": "Giới thiệu"
   },
   "login": {
-    "username": "Vui lòng nhập username"
+    "username": "Vui lòng nhập username",
+    "is-has-account": "Bạn chưa có tài khoản?",
+    "btn-login": "Đăng nhập",
+    "login-google": "- hoặc đăng nhập với -"
   },
   "home-page": {
     "new-product": "SẢN PHẨM MỚI",
