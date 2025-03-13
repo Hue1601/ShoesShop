@@ -2,7 +2,7 @@ package org.example.shoesshopbe.Service;
 
 import org.example.shoesshopbe.Model.Products;
 import org.example.shoesshopbe.Repo.ProductRepo;
-import org.example.shoesshopbe.Reponse.ProductResponse;
+import org.example.shoesshopbe.Response.ProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +27,13 @@ public class ProductService {
     }
 
     public List<ProductResponse> getTopProduct5ByLastCollection() {
-      List<Products> products = productRepo.findTop5ProductsFromLatestCollection();
-      return products.stream().map(product ->
-              new ProductResponse(
-                      product.getProductName(),
-                      product.getBrand().getBrandName(),
-                      String.valueOf(product.getPrice())
-              )
-              ).collect(Collectors.toList());
+        List<Products> products = productRepo.findTop5ProductsFromLatestCollection();
+        return products.stream().map(product ->
+                new ProductResponse(
+                        product.getProductName(),
+                        product.getBrand().getBrandName(),
+                        String.valueOf(product.getPrice())
+                )
+        ).collect(Collectors.toList());
     }
 }

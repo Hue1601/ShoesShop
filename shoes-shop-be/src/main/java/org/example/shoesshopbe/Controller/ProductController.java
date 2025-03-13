@@ -1,8 +1,8 @@
-package org.example.shoesshopbe;
+package org.example.shoesshopbe.Controller;
 
 import org.example.shoesshopbe.Model.Products;
 import org.example.shoesshopbe.Repo.ProductRepo;
-import org.example.shoesshopbe.Reponse.ProductResponse;
+import org.example.shoesshopbe.Response.ProductResponse;
 import org.example.shoesshopbe.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,16 +16,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
+
    @Autowired
    private ProductService productService;
 
    @Autowired
    private ProductRepo productRepo;
-   @GetMapping("/h")
-   public ResponseEntity<?> getProducts() {
-       List<Products> products = productRepo.findAll();
-       return new ResponseEntity<>(products, HttpStatus.OK);
-   }
     @GetMapping("/list")
     public ResponseEntity<?> getAllProducts() {
         List<ProductResponse> products = productService.getAllProducts();

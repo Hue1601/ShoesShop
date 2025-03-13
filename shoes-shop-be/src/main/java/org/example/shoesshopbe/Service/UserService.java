@@ -1,7 +1,5 @@
 package org.example.shoesshopbe.Service;
 
-import org.example.shoesshopbe.Exception.AuthenticationException;
-import org.example.shoesshopbe.Exception.MessageError;
 import org.example.shoesshopbe.Model.Users;
 import org.example.shoesshopbe.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;

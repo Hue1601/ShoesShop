@@ -1,4 +1,4 @@
-package org.example.shoesshopbe.Reponse;
+package org.example.shoesshopbe.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,6 @@
 package org.example.shoesshopbe.Repo;
 
 import org.example.shoesshopbe.Model.Products;
-import org.example.shoesshopbe.Reponse.ProductResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

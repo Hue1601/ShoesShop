@@ -3,7 +3,6 @@ package org.example.shoesshopbe.Model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
-import org.example.shoesshopbe.Exception.MessageError;
 
 import java.time.LocalDateTime;
 
