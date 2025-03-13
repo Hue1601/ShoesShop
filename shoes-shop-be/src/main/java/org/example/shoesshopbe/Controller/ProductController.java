@@ -1,7 +1,5 @@
 package org.example.shoesshopbe.Controller;
 
-import org.example.shoesshopbe.Model.Products;
-import org.example.shoesshopbe.Repo.ProductRepo;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.example.shoesshopbe.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +15,9 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-   @Autowired
-   private ProductService productService;
+    @Autowired
+    private ProductService productService;
 
-   @Autowired
-   private ProductRepo productRepo;
     @GetMapping("/list")
     public ResponseEntity<?> getAllProducts() {
         List<ProductResponse> products = productService.getAllProducts();
@@ -30,7 +26,7 @@ public class ProductController {
 
     @GetMapping("/five-product-latest-collection")
     public ResponseEntity<?> getTop5ProductByLatestCollection() {
-       List<ProductResponse> products = productService.getTopProduct5ByLastCollection();
-       return new ResponseEntity<>(products, HttpStatus.OK);
+        List<ProductResponse> products = productService.getTopProduct5ByLastCollection();
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 }

@@ -73,7 +73,10 @@
     width: 197px;
     height: 99px;
 }
-
+.price{
+    font-size: 17px;
+    color:black;
+}
 /*cart*/
 .cart-container{
     display: flex;

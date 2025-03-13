@@ -4,6 +4,7 @@ import org.example.shoesshopbe.Model.Products;
 import org.example.shoesshopbe.Repo.ProductRepo;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,24 +17,12 @@ public class ProductService {
 
     public List<ProductResponse> getAllProducts() {
 
-        List<Products> products = productRepo.findTop5ByOrderByCreatedAtDesc();
-        return products.stream().map(product ->
-                new ProductResponse(
-                        product.getProductName(),
-                        product.getBrand().getBrandName(),
-                        String.valueOf(product.getPrice())
-                )
-        ).collect(Collectors.toList());
+        List<ProductResponse> products = productRepo.findTop5Product();
+        return products;
     }
 
     public List<ProductResponse> getTopProduct5ByLastCollection() {
-        List<Products> products = productRepo.findTop5ProductsFromLatestCollection();
-        return products.stream().map(product ->
-                new ProductResponse(
-                        product.getProductName(),
-                        product.getBrand().getBrandName(),
-                        String.valueOf(product.getPrice())
-                )
-        ).collect(Collectors.toList());
+        List<ProductResponse> products = productRepo.findTop5ProductsFromLatestCollection();
+        return products;
     }
 }
