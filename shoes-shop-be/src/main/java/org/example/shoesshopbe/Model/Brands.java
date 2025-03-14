@@ -14,4 +14,5 @@ public class Brands {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String brandName;
+    private String logo;
 }

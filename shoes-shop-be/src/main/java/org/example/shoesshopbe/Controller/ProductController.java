@@ -1,5 +1,7 @@
 package org.example.shoesshopbe.Controller;
 
+import org.example.shoesshopbe.Model.Brands;
+import org.example.shoesshopbe.Repo.BrandRepo;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.example.shoesshopbe.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,7 @@ public class ProductController {
 
     @GetMapping("/list")
     public ResponseEntity<?> getAllProducts() {
-        List<ProductResponse> products = productService.getAllProducts();
+        List<ProductResponse> products = productService.getTop5Products();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -29,4 +31,29 @@ public class ProductController {
         List<ProductResponse> products = productService.getTopProduct5ByLastCollection();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
+    @GetMapping("/products")
+    public ResponseEntity<?> findAllProducts() {
+        List<ProductResponse> products = productService.findAllProduct();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/products-asc")
+    public ResponseEntity<?> findAllProductOrderByAsc() {
+        List<ProductResponse> products = productService.findAllProductOrderByAsc();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/price-desc")
+    public ResponseEntity<?> findAllProductOrderByPriceDesc() {
+        List<ProductResponse> products = productService.findAllProductOrderByPriceDesc();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/price-asc")
+    public ResponseEntity<?> findAllProductOrderByPriceAsc() {
+        List<ProductResponse> products = productService.findAllProductOrderByPriceAsc();
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
 }
