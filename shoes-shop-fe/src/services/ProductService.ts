@@ -4,7 +4,7 @@ class ProductService {
   private ROOT_API = "http://localhost:8080/product";
   async getProduct(){
       const response = await axios.get(`${this.ROOT_API}/list`);
-      return
+      return response
   }
 
   async  getProductByLatestCollection(){
