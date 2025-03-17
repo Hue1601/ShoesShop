@@ -14,7 +14,8 @@ CREATE TABLE Users (
 );
 CREATE TABLE Brands (
     ID INT IDENTITY(1,1) PRIMARY KEY,
-    BrandName NVARCHAR(100) UNIQUE NOT NULL
+    BrandName NVARCHAR(100) UNIQUE NOT NULL,
+	Logo NVARCHAR(MAX)
 );
 
 CREATE TABLE Products (
@@ -155,39 +156,21 @@ INSERT INTO ProductDiscounts (ProductID, DiscountID) VALUES
 (3, 3), (4, 1), -- Puma Classic giảm 20%, Reebok Nano giảm 10%
 (5, 2);         -- New Balance 574 giảm 15%
 
--- Thêm dữ liệu vào bảng ProductImages
-INSERT INTO ProductImages (ProductID, ImageURL) VALUES 
-(1, '/uploads/images/nike-air-max-1.jpg') ,
-(2, '/uploads/images/adidas-ultraboost-1.jpg');
 
-
-drop table ProductImages
-ALTER TABLE Products 
-ALTER COLUMN Price DECIMAL(18,3) NOT NULL;
 
 Select * from Products p join ProductColors pc on p.ID = pc.ProductID join Colors c on c.id= pc.ColorID
 SELECT top 5
-    p.ID AS ProductID,
+	p.ID,
     p.ProductName,
-    p.Description,
+    p.BrandID,
     p.Price,
-    p.Gender,
-    p.CreatedAt,
-    c.ColorName
+	pimg.ImageURL
 FROM Products p
-LEFT JOIN ProductColors pc ON p.ID = pc.ProductID
-LEFT JOIN Colors c ON pc.ColorID = c.ID
+LEFT JOIN ProductImages pimg ON p.ID = pimg.ProductID
 order by p.CreatedAt desc;
 
-SELECT TOP 5 
-    p.ID AS ProductID,
-    p.ProductName,
-    p.Price,
-    c.CollectionName,
-FROM Products p
-JOIN ProductCollections pc ON p.ID = pc.ProductID
-JOIN Collections c ON pc.CollectionID = c.ID
-WHERE c.ID = (SELECT TOP 1 ID FROM Collections ORDER BY CreatedAt DESC) -- Lấy ID của bộ sưu tập mới nhất
-ORDER BY p.CreatedAt DESC; -- Sắp xếp sản phẩm theo thời gian mới nhất
-
+select c.ColorName  from ProductColors pc
+JOIN Products p on p.ID = pc.ProductID
+JOIN Colors c on c.ID = pc.ColorID
+where p.ID = '1'
 

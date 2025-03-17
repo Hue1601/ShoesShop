@@ -78,14 +78,5 @@ public interface ProductRepo extends JpaRepository<Products, Integer> {
                 ORDER BY p.price desc""")
     List<ProductResponse> findAllProductsOrderByPriceDesc();
 
-    @Query("""
-             SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                      p.id,  p.productName,p.brand.brandName, Cast(p.price AS String),img.imageUrl
-                         ) FROM Products p
-                         LEFT JOIN ProductImages img on p.id = img.product.id
-                         WHERE p.gender =: gender
-                         ORDER BY p.createdAt desc
-            """)
-    List<ProductResponse> findAllProductsByGender(@Param("gender") String gender);
 
 }

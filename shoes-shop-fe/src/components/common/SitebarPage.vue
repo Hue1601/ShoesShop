@@ -6,10 +6,12 @@
       <v-icon>mdi-chevron-down</v-icon>
     </p>
     <v-list v-if="showListDiscount">
-      <v-checkbox label="Checkbox" hide-details></v-checkbox>
-      <v-checkbox label="Checkbox" hide-details></v-checkbox>
-      <v-checkbox label="Checkbox" hide-details></v-checkbox>
-      <v-checkbox label="Checkbox" hide-details></v-checkbox>
+      <v-checkbox label="Dưới 10%" hide-details value="0-10"/>
+      <v-checkbox label="10-20%" hide-details value="10-20"/>
+      <v-checkbox label="20-30%" hide-details value="20-30"/>
+      <v-checkbox label="30-40%" hide-details value="30-40"/>
+      <v-checkbox label="40-50%" hide-details value="40-50"/>
+      <v-checkbox label="Trên 50%" hide-details value="50-100"/>
     </v-list>
 
     <!--    Giới tính-->
@@ -18,9 +20,9 @@
       <v-icon>mdi-chevron-down</v-icon>
     </p>
     <v-list v-if="showListGender">
-      <v-radio label="Nam" hide-details />
-      <v-radio label="Nữ" hide-details />
-      <v-radio label="Unisex" hide-details />
+      <v-radio label="Nam" hide-details value="male" />
+      <v-radio label="Nữ" hide-details value="female"/>
+      <v-radio label="Unisex" hide-details value ="unisex"/>
     </v-list>
 
     <!--    Thương hiệu-->
@@ -30,7 +32,8 @@
     </p>
     <v-list v-if="showListBrand">
       <v-checkbox
-        :label="brand.brandName || 'Không có tên'"
+        :label="brand.brandName"
+        :value="brand.id"
         hide-details
         v-for="(brand, i) in listBrand"
         :key="i"
@@ -44,6 +47,7 @@
     </p>
     <v-list v-if="showListCollection">
       <v-checkbox
+        :value = "collection.id"
         :label="collection.collectionName"
         hide-details
         v-for="(collection, index) in collection"
@@ -57,10 +61,12 @@
       <v-icon>mdi-chevron-down</v-icon>
     </p>
     <v-list v-if="showListPrice">
-      <v-checkbox label="Checkbox" hide-details></v-checkbox>
-      <v-checkbox label="Checkbox" hide-details></v-checkbox>
-      <v-checkbox label="Checkbox" hide-details></v-checkbox>
-      <v-checkbox label="Checkbox" hide-details></v-checkbox>
+      <v-checkbox label="Dưới 500.000 đ" hide-details value="0-500"/>
+      <v-checkbox label="500.000 đ - 1.000.000 đ" hide-details value="500-1000"/>
+      <v-checkbox label="1.000.000 đ - 2.000.000 đ" hide-details value="1000-2000"/>
+      <v-checkbox label="2.000.000 đ - 3.000.000 đ" hide-details value="2000-3000"/>
+      <v-checkbox label="3.000.000 đ - 4.000.000 đ" hide-details value="3000-4000"/>
+      <v-checkbox label="Trên 5.000.000 đ" hide-details value="5000"/>
     </v-list>
 
     <!--    Màu sắc-->
@@ -90,14 +96,17 @@ const showListPrice = ref(false)
 const showListColor = ref(false)
 
 interface Brand {
+  id:number
   brandName: string
 }
 
 interface Collection {
+  id:number
   collectionName: string
 }
 
 interface Color {
+  id:number
   colorName: string
 }
 
@@ -141,6 +150,8 @@ const getColor = async () => {
   const res = await sitebarService.getColor()
   color.value = res.data
 }
+
+
 onMounted(() => {
   getAll()
   getCollection()

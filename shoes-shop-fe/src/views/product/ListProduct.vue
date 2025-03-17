@@ -5,14 +5,14 @@
       <Sitebar />
       <div class="list-product">
         <v-text-field
-          :loading="loading"
+          v-model="searchQuery"
           append-inner-icon="mdi-magnify"
           density="compact"
-          label="Search templates"
+          label="Tìm kiếm sản phẩm"
           variant="outlined"
           hide-details
-          @click:append-inner="onClick"
-        ></v-text-field>
+        />
+
 
         <p class="text-arrange" @click="onclickArrange">
           {{ t('list-product.btn-arrange') }}
@@ -21,23 +21,24 @@
 
         <v-list class="list-arrange" v-if="showListArrange">
           <v-list-item @click="getAll">{{ t('list-product.new-to-old') }}</v-list-item>
-          <v-list-item @click="arrangeOldToNew">{{ t('list-product.old-to-new') }}</v-list-item>
+          <v-list-item @click="
+          arrangeOldToNew">{{ t('list-product.old-to-new') }}</v-list-item>
           <v-list-item @click="arrangePriceAsc">{{ t('list-product.price-asc') }}</v-list-item>
           <v-list-item @click="arrangePriceDesc">{{ t('list-product.price-desc') }}</v-list-item>
         </v-list>
 
         <v-list class="product-list">
           <v-card
-            @click="goToDetail"
             class="ma-4"
             height="380"
             width="230"
             style="box-shadow: none"
-            to="/product-detail"
-            v-for="(product, index) in products"
+            v-for="(product, index) in filteredProducts"
             :key="index"
+            :to="`/product-detail/${product.id}`"
           >
-            <div class="">
+
+          <div class="">
               <img :src="product.imageUrl" class="img-product" alt="" />
 <!--              <div class="color-options">-->
 <!--                <v-btn-->
@@ -68,7 +69,7 @@ import Sitebar from '../../components/common/SitebarPage.vue'
 
 import { productService } from '@/services/ProductService.ts'
 import router from '@/router'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -76,23 +77,23 @@ const { t } = useI18n()
 const showListArrange = ref(false)
 
 interface Product {
+  id:number
   productName: string
   brandName: string
-  price: string
+  price: number
   imageUrl: string
 }
-const formatPrice = (price) => {
+const formatPrice = (price:number) => {
     return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(price) + " đ";
 };
 
 const products = ref<Product[]>([])
+const searchQuery = ref<string>('')
+
 const onclickArrange = () => {
   showListArrange.value = !showListArrange.value
 }
 
-const goToDetail = () => {
-  router.push('/product-detail')
-}
 
 const getAll = async () => {
   const res = await productService.getAllProduct()
@@ -111,6 +112,14 @@ const arrangePriceDesc =async () => {
   const res = await productService.findAllProductOrderByPriceDesc()
   products.value = res.data
 }
+
+const filteredProducts = computed(() =>{
+  if(!products.value) return products.value
+  return products.value.filter(products =>
+   products.productName.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
+
 onMounted(() => {
   getAll()
 })
