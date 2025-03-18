@@ -50,9 +50,5 @@ public class SitebarController {
         return new ResponseEntity<>(colors, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<?> search(@RequestParam String gender) {
-        List<Products> prodcuct = sitebarService.findAllProducts(gender);
-        return new ResponseEntity<>(prodcuct, HttpStatus.OK);
-    }
+
 }

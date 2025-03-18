@@ -69,12 +69,14 @@ import Sitebar from '../../components/common/SitebarPage.vue'
 
 import { productService } from '@/services/ProductService.ts'
 import router from '@/router'
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
 
 const showListArrange = ref(false)
+const products = ref<Product[]>([])
+const searchQuery = ref<string>('')
 
 interface Product {
   id:number
@@ -87,16 +89,43 @@ const formatPrice = (price:number) => {
     return new Intl.NumberFormat("vi-VN", { maximumFractionDigits: 0 }).format(price) + " đ";
 };
 
-const products = ref<Product[]>([])
-const searchQuery = ref<string>('')
+
 
 const onclickArrange = () => {
   showListArrange.value = !showListArrange.value
 }
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+//
+// const selectedFilters = ref<{
+//   discount: string[]
+//   gender: string
+//   brand: string[]
+//   collection: string[]
+//   color: string[]
+//   price: string[]
+// }>({
+//   discount: [],
+//   gender: '',
+//   brand: [],
+//   collection: [],
+//   color: [],
+//   price: []
+// })
 
 const getAll = async () => {
-  const res = await productService.getAllProduct()
+
+  const params = {
+    gender: route.query.gender,
+    color: route.query.color, // Nếu là mảng, chuyển thành chuỗi
+    brand: route.query.brand,
+    collection : route.query.collection,
+    price: route.query.price,
+    discount: route.query.discount,
+  }
+
+  const res = await productService.getAllProduct(params)
   products.value = res.data
 }
 

@@ -4,12 +4,11 @@ import org.example.shoesshopbe.Model.Products;
 
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
 import java.util.List;
 
-public interface ProductRepo extends JpaRepository<Products, Integer> {
+public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpecificationExecutor<Products> {
     List<Products> findTop5ByOrderByCreatedAtDesc();
 
     @Query("""
@@ -40,17 +39,6 @@ public interface ProductRepo extends JpaRepository<Products, Integer> {
                 ORDER BY p.createdAt DESC
             """)
     List<ProductResponse> findAllProducts();
-
-//    @Query("""
-//    SELECT p.productName, b.brandName, Cast(p.price AS String), c.colorName, img.imageUrl,p.id
-//    FROM Products p
-//    LEFT JOIN p.brand b
-//    LEFT JOIN ProductImages img ON p.id = img.product.id
-//    LEFT JOIN ProductColors pc on p.id= pc.product.id
-//    LEFT JOIN Colors c ON pc.color.id = c.id
-//    ORDER BY p.createdAt DESC
-//""")
-//    List<Object[]> findAllProducts();
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(

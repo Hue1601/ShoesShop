@@ -38,10 +38,10 @@
     <v-list v-if="showListBrand">
       <v-checkbox
         :label="brand.brandName"
-        :value="brand.id"
+        :value="String(brand.id)"
         hide-details
-        v-for="brand in listBrand"
-        :key="brand.id"
+        v-for="(brand,index) in listBrand"
+        :key="index"
         v-model="selectedFilters.brand"
         @change="updateQueryParams"
       ></v-checkbox>
@@ -54,7 +54,7 @@
     </p>
     <v-list v-if="showListCollection">
       <v-checkbox
-        :value="collection.id"
+        :value="String(collection.id)"
         :label="collection.collectionName"
         hide-details
         v-for="(collection, index) in collection"
@@ -97,6 +97,8 @@
         @change="updateQueryParams"
       ></v-checkbox>
     </v-list>
+
+    
   </v-sheet>
 </template>
 <script setup lang="ts">
@@ -112,7 +114,9 @@ const showListPrice = ref(false)
 const showListColor = ref(false)
 
 const router = useRouter()
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 interface Brand {
   id: number
   brandName: string
@@ -188,14 +192,22 @@ const getColor = async () => {
 }
 
 // push select data to param
-const selectedFilters = ref({
+const selectedFilters = ref<{
+  discount: string[]
+  gender: string
+  brand: string[]
+  collection: string[]
+  color: string[]
+  price: string[]
+}>({
   discount: [],
   gender: '',
   brand: [],
   collection: [],
   color: [],
-  price: [],
+  price: []
 })
+
 
 const updateQueryParams = () => {
   const params: Record<string, string> = {}
@@ -226,5 +238,27 @@ onMounted(() => {
   getAll()
   getCollection()
   getColor()
+
+//hiển thị lại trị ở sitebar khi reload lại trang
+  if (route.query.brand) {
+    selectedFilters.value.brand = (route.query.brand as string).split(',')
+  }
+  if (route.query.discount) {
+    selectedFilters.value.discount = (route.query.discount as string).split(',')
+    console.log('Discount After Split:', selectedFilters.value.discount)
+  }
+  if (route.query.gender) {
+    selectedFilters.value.gender = (route.query.gender).toString()
+  }
+  if (route.query.color) {
+    selectedFilters.value.color = (route.query.color as string).split(',')
+  }
+  if (route.query.price) {
+    selectedFilters.value.price = (route.query.price as string).split(',')
+  }
+  if (route.query.collection) {
+    selectedFilters.value.collection = (route.query.collection as string).split(',')
+  }
+
 })
 </script>

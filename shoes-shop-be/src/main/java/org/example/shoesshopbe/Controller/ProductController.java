@@ -1,14 +1,15 @@
 package org.example.shoesshopbe.Controller;
 
-import org.example.shoesshopbe.Model.Brands;
-import org.example.shoesshopbe.Repo.BrandRepo;
+import org.example.shoesshopbe.Model.Products;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.example.shoesshopbe.Service.ProductService;
+import org.example.shoesshopbe.Service.SitebarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,6 +20,9 @@ public class ProductController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private SitebarService sitebarService;
 
     @GetMapping("/list")
     public ResponseEntity<?> getAllProducts() {
@@ -33,9 +37,21 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<?> findAllProducts() {
+    public ResponseEntity<?> findAllProducts(@RequestParam(required = false) String discount,
+                                             @RequestParam(required = false) String gender,
+                                             @RequestParam(required = false) String brand,
+                                             @RequestParam(required = false) String collection,
+                                             @RequestParam(required = false) String color,
+                                             @RequestParam(required = false) String price
+    ) {
+        if (discount!=null && !discount.isEmpty()|| gender != null && !gender.isEmpty() || brand != null && !brand.isEmpty() || collection != null && !collection.isEmpty() || color != null && !color.isEmpty() ) {
+            List<Products> pro = sitebarService.findAllProducts(discount, gender, brand, collection, color, price);
+            return new ResponseEntity<>(pro, HttpStatus.OK);
+        }
+
         List<ProductResponse> products = productService.findAllProduct();
         return new ResponseEntity<>(products, HttpStatus.OK);
+
     }
 
     @GetMapping("/products-asc")

@@ -24,6 +24,7 @@ public class ProductService {
     public List<ProductResponse> findAllProduct() {
         return productRepo.findAllProducts();
     }
+
 //public List<ListProductResponse> findAllProduct() {
 //    List<Object[]> rawProducts = productRepo.findAllProducts();
 //    System.out.println("hue " +rawProducts);

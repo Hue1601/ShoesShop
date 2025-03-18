@@ -18,6 +18,7 @@ public class ProductDiscounts {
     @ManyToOne
     @JoinColumn(name = "ProductID")
     private Products product;
+
     @ManyToOne
     @JoinColumn(name = "DiscountID")
     private Discounts discount;

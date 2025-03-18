@@ -11,8 +11,10 @@ class ProductService {
     const response = await  axios.get(`${this.ROOT_API}/five-product-latest-collection`)
     return response;
   }
-  async getAllProduct(){
-    const response = await axios.get(`${this.ROOT_API}/products`);
+  async getAllProduct(filters = {}){
+    const response = await axios.get(`${this.ROOT_API}/products`,{
+      params:filters
+    });
     return response;
   }
   async findAllProductOrderByAsc(){
