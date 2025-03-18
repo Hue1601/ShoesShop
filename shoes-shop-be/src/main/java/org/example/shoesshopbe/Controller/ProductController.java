@@ -39,13 +39,13 @@ public class ProductController {
     @GetMapping("/products")
     public ResponseEntity<?> findAllProducts(@RequestParam(required = false) String discount,
                                              @RequestParam(required = false) String gender,
-                                             @RequestParam(required = false) String brand,
-                                             @RequestParam(required = false) String collection,
-                                             @RequestParam(required = false) String color,
+                                             @RequestParam(required = false) List<String> brand,
+                                             @RequestParam(required = false) List<String> collection,
+                                             @RequestParam(required = false) List<String> color,
                                              @RequestParam(required = false) String price
     ) {
         if (discount!=null && !discount.isEmpty()|| gender != null && !gender.isEmpty() || brand != null && !brand.isEmpty() || collection != null && !collection.isEmpty() || color != null && !color.isEmpty() ) {
-            List<Products> pro = sitebarService.findAllProducts(discount, gender, brand, collection, color, price);
+            List<ProductResponse> pro = sitebarService.findAllProducts(discount, gender, brand, collection, color, price);
             return new ResponseEntity<>(pro, HttpStatus.OK);
         }
 

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Table(name = "Products")
 @Entity
@@ -21,12 +22,16 @@ public class Products {
 
     @ManyToOne
     @JoinColumn(name = "BrandID")
-
     private Brands brand;
+
     private String description;
     private BigDecimal price;
     private String gender;
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+    private List<ProductImages> productImages;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProductDiscounts> productDiscounts;
 
@@ -34,5 +39,5 @@ public class Products {
     private List<ProductColors> productColor;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProductCollections> productCollection;
+    private Set<ProductCollections> productCollection;
 }

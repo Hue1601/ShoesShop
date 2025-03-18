@@ -191,7 +191,12 @@
     width: 205px;
     border: 1px solid #cecdcd !important;
 }
-
+.text-not-found{
+    text-align: center;
+    margin-top: 10px;
+    color: black;
+    font-size: 14px;
+}
 /*product detail*/
 .img-product-detail{
     width: 800px;

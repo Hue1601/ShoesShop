@@ -98,7 +98,7 @@
       ></v-checkbox>
     </v-list>
 
-    
+
   </v-sheet>
 </template>
 <script setup lang="ts">
@@ -245,7 +245,7 @@ onMounted(() => {
   }
   if (route.query.discount) {
     selectedFilters.value.discount = (route.query.discount as string).split(',')
-    console.log('Discount After Split:', selectedFilters.value.discount)
+
   }
   if (route.query.gender) {
     selectedFilters.value.gender = (route.query.gender).toString()

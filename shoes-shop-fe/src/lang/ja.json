@@ -30,6 +30,7 @@
     "old-to-new": "Cũ đến mới",
     "new-to-old": "Mới đến cũ",
     "price-asc": "Giá tăng dần",
-    "price-desc": "Giá giảm dần"
+    "price-desc": "Giá giảm dần",
+    "text-not-found": "Không có sản phẩm nào phù hợp"
   }
 }
