@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Discounts {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
-    private Float countPercentage;
+    private Float discountPercentage;
     private LocalDateTime createdAt;
     private LocalDateTime startedAt;
     private LocalDateTime endAt;

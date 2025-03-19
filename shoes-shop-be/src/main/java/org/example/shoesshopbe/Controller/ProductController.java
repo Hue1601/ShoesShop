@@ -37,12 +37,12 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<?> findAllProducts(@RequestParam(required = false) String discount,
+    public ResponseEntity<?> findAllProducts(@RequestParam(required = false) List<String> discount,
                                              @RequestParam(required = false) String gender,
                                              @RequestParam(required = false) List<String> brand,
                                              @RequestParam(required = false) List<String> collection,
                                              @RequestParam(required = false) List<String> color,
-                                             @RequestParam(required = false) String price,
+                                             @RequestParam(required = false) List<String> price,
                                              @RequestParam(required = false) String keyword
     ) {
         if (discount!=null && !discount.isEmpty() ||

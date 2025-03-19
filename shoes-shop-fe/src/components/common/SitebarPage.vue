@@ -106,7 +106,7 @@ import { onMounted, ref } from 'vue'
 import { sitebarService } from '@/services/SitebarService.ts'
 import { useRouter } from 'vue-router'
 import { brandService } from '@/services/BrandService.ts'
-import {type Interface} from '@/interface/interface.ts'
+import { type Brand, type Collection,type Color } from '@/interface/interface.ts'
 
 const showListDiscount = ref(false)
 const showListGender = ref(false)
@@ -130,15 +130,15 @@ const discountOptions = ref([
 ])
 
 const priceOptions = ref([
-  { label: 'Dưới 500.000 đ', value: '0-500' },
-  { label: '500.000 đ - 1.000.000 đ', value: '500-1000' },
-  { label: '1.000.000 đ - 2.000.000 đ', value: '1000-2000' },
-  { label: '2.000.000 đ - 3.000.000 đ', value: '2000-3000' },
-  { label: '3.000.000 đ - 4.000.000 đ', value: '3000-4000' },
-  { label: 'Trên 5.000.000 đ', value: '5000' },
+  { label: 'Dưới 500.000 đ', value: '0-500000' },
+  { label: '500.000 đ - 1.000.000 đ', value: '500000-1000000' },
+  { label: '1.000.000 đ - 2.000.000 đ', value: '1000000-2000000' },
+  { label: '2.000.000 đ - 3.000.000 đ', value: '2000000-3000000' },
+  { label: '3.000.000 đ - 4.000.000 đ', value: '3000000-4000000' },
+  { label: 'Trên 5.000.000 đ', value: '5000000' },
 ])
 
-const listBrand = ref<Interface[]>([])
+const listBrand = ref<Brand[]>([])
 const collection = ref<Collection[]>([])
 const color = ref<Color[]>([])
 
