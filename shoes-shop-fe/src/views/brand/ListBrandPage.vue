@@ -17,14 +17,14 @@
 import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
 
-import { sitebarService } from '@/services/SitebarService.ts'
+import { brandService } from '@/services/BrandService.ts'
 import { onMounted,ref } from 'vue'
 
-import {type Brand } from '@/interface/Brand.ts';
+import {type Interface } from '@/interface/interface.ts';
 
-const listBrand = ref<Brand[]>([])
+const listBrand = ref<Interface[]>([])
 const getAll =async () =>{
-   const res = await sitebarService.getAll();
+   const res = await brandService.getAll();
    listBrand.value = res.data
 }
 onMounted(() =>{

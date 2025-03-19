@@ -1,5 +1,5 @@
 <template>
-  <v-sheet style="width: 20%">
+  <v-sheet style="width:fit-content">
     <!--    Phần trăm giảm-->
     <p class="custom-select" @click="onclickDiscount">
       Phần trăm giảm
@@ -105,6 +105,8 @@
 import { onMounted, ref } from 'vue'
 import { sitebarService } from '@/services/SitebarService.ts'
 import { useRouter } from 'vue-router'
+import { brandService } from '@/services/BrandService.ts'
+import {type Interface} from '@/interface/interface.ts'
 
 const showListDiscount = ref(false)
 const showListGender = ref(false)
@@ -117,20 +119,6 @@ const router = useRouter()
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-interface Brand {
-  id: number
-  brandName: string
-}
-
-interface Collection {
-  id: number
-  collectionName: string
-}
-
-interface Color {
-  id: number
-  colorName: string
-}
 
 const discountOptions = ref([
   { label: 'Dưới 10%', value: '0-10' },
@@ -150,7 +138,7 @@ const priceOptions = ref([
   { label: 'Trên 5.000.000 đ', value: '5000' },
 ])
 
-const listBrand = ref<Brand[]>([])
+const listBrand = ref<Interface[]>([])
 const collection = ref<Collection[]>([])
 const color = ref<Color[]>([])
 
@@ -179,7 +167,7 @@ const onclickColor = () => {
 }
 
 const getAll = async () => {
-  const res = await sitebarService.getAll()
+  const res = await brandService.getAll()
   listBrand.value = res.data
 }
 const getCollection = async () => {

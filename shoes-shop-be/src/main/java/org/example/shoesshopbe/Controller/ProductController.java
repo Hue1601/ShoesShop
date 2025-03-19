@@ -42,16 +42,22 @@ public class ProductController {
                                              @RequestParam(required = false) List<String> brand,
                                              @RequestParam(required = false) List<String> collection,
                                              @RequestParam(required = false) List<String> color,
-                                             @RequestParam(required = false) String price
+                                             @RequestParam(required = false) String price,
+                                             @RequestParam(required = false) String keyword
     ) {
-        if (discount!=null && !discount.isEmpty()|| gender != null && !gender.isEmpty() || brand != null && !brand.isEmpty() || collection != null && !collection.isEmpty() || color != null && !color.isEmpty() ) {
-            List<ProductResponse> pro = sitebarService.findAllProducts(discount, gender, brand, collection, color, price);
+        if (discount!=null && !discount.isEmpty() ||
+                gender != null && !gender.isEmpty() ||
+                brand != null && !brand.isEmpty() ||
+                collection != null && !collection.isEmpty() ||
+                color != null && !color.isEmpty() ||
+                price != null && !price.isEmpty() ||
+                keyword != null && !keyword.isEmpty()) {
+            List<ProductResponse> pro = sitebarService.findAllProducts(discount, gender, brand, collection, color, price,keyword);
             return new ResponseEntity<>(pro, HttpStatus.OK);
         }
 
         List<ProductResponse> products = productService.findAllProduct();
         return new ResponseEntity<>(products, HttpStatus.OK);
-
     }
 
     @GetMapping("/products-asc")

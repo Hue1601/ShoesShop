@@ -1,10 +1,9 @@
 import axios from 'axios'
 
 class BrandService {
-  private ROOT_URL = 'http://localhost:8080'
-
-  async getAllBrands() {
-    const response = await axios.get(`${this.ROOT_URL}/getAllBrands`)
+  private ROOT_API = "http://localhost:8080/sitebar";
+  async getAll(){
+    const response = await axios.get(`${this.ROOT_API}/brand`)
     return response;
   }
 }

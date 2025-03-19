@@ -105,6 +105,7 @@ const getAll = async () => {
     collection: route.query.collection,
     price: route.query.price,
     discount: route.query.discount,
+    keyword:route.query.keyword
   }
 
   const res = await productService.getAllProduct(params)

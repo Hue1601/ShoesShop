@@ -17,7 +17,11 @@ public class SitebarService {
     @Autowired
     private ProductRepo productRepo;
 
-    public List<ProductResponse> findAllProducts(String discount, String gender, List<String> brand, List<String> collection, List<String> color, String price) {
+    public List<ProductResponse> findAllProducts(String discount, String gender,
+                                                 List<String> brand, List<String> collection,
+                                                 List<String> color, String price,
+                                                 String keyword
+    ) {
         Specification<Products> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (discount != null && !discount.isEmpty()) {
@@ -38,6 +42,9 @@ public class SitebarService {
             }
             if (price != null && !price.isEmpty()) {
                 predicates.add(criteriaBuilder.equal(root.get("price"), price));
+            }
+            if (keyword != null) {
+                predicates.add(criteriaBuilder.like(root.get("productName"), "%" + keyword + "%"));
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };

@@ -4,7 +4,7 @@
     <h2 class="bold-text">{{t('cart.cart')}}</h2>
 
     <div class="cart-container">
-      <div class="list-product">
+      <div class="product-in-cart">
         <div class="product-cart">
           <img
             src="../../components/icons/listicon/FZ5486-003-1_360x.webp"

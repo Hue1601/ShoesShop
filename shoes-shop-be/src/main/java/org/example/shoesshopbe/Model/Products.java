@@ -39,5 +39,5 @@ public class Products {
     private List<ProductColors> productColor;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<ProductCollections> productCollection;
+    private List<ProductCollections> productCollection;
 }
