@@ -69,7 +69,7 @@ import Sitebar from '../../components/common/SitebarPage.vue'
 
 import { productService } from '@/services/ProductService.ts'
 import {type Product} from '@/interface/interface.ts'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
@@ -77,6 +77,11 @@ const { t } = useI18n()
 const showListArrange = ref(false)
 const products = ref<Product[]>([])
 const searchQuery = ref<string>('')
+
+const page = ref(0)
+const size = 4
+const isLoading = ref(false)
+const hasMore = ref(true)
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(price) + ' đ'
@@ -90,6 +95,9 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 const getAll = async () => {
+  if (isLoading.value || !hasMore.value) return
+  isLoading.value = true
+
   const params = {
     gender: route.query.gender,
     color: route.query.color,
@@ -97,13 +105,24 @@ const getAll = async () => {
     collection: route.query.collection,
     price: route.query.price,
     discount: route.query.discount,
-    keyword:route.query.keyword
+    keyword: route.query.keyword,
+    page: page.value,
+    size: size,
   }
 
-  const res = await productService.getAllProduct(params)
-  console.log(res)
-  products.value = res.data.content
+  try {
+    const res = await productService.getAllProduct(params)
+    const newProducts = res.data.content
+    if (newProducts.length < size) {
+      hasMore.value = false
+    }
+    products.value.push(...newProducts)
+    page.value++
+  } finally {
+    isLoading.value = false
+  }
 }
+
 const arrangeOldToNew = async () => {
   const res = await productService.findAllProductOrderByAsc()
   products.value = res.data
@@ -123,10 +142,30 @@ const filteredProducts = computed(() => {
     products.productName.toLowerCase().includes(searchQuery.value.toLowerCase()),
   )
 })
+const handleScroll = () => {
+  const scrollTop = window.scrollY //Lấy vị trí cuộn hiện tại
+  const windowHeight = window.innerHeight //Chiều cao vùng hiển thị của trình duyệt (viewport).
+  const fullHeight = document.documentElement.scrollHeight //Chiều cao toàn bộ nội dung trang, kể cả phần vượt khỏi vùng hiển thị.
+//Khi người dùng cuộn xuống gần cuối (cách đáy 300px)
+  if (scrollTop + windowHeight >= fullHeight - 300) {
+    getAll()
+  }
+}
+
 watch(() => route.query, () => {
+  products.value = []
+  page.value = 0
+  hasMore.value = true
   getAll()
 }, { deep: true })
+
 onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
   getAll()
 })
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+})
+
 </script>
