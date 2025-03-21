@@ -32,7 +32,7 @@
           <v-card
             class="ma-4"
             height="380"
-            width="230"
+            width="249"
             style="box-shadow: none"
             v-for="(product, index) in filteredProducts"
             :key="index"
@@ -68,7 +68,7 @@ import Footer from '../../components/common/FooterPage.vue'
 import Sitebar from '../../components/common/SitebarPage.vue'
 
 import { productService } from '@/services/ProductService.ts'
-
+import {type Product} from '@/interface/interface.ts'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
@@ -77,14 +77,6 @@ const { t } = useI18n()
 const showListArrange = ref(false)
 const products = ref<Product[]>([])
 const searchQuery = ref<string>('')
-
-interface Product {
-  id: number
-  productName: string
-  brandName: string
-  price: number
-  imageUrl: string
-}
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(price) + ' đ'
@@ -109,9 +101,9 @@ const getAll = async () => {
   }
 
   const res = await productService.getAllProduct(params)
-  products.value = res.data
+  console.log(res)
+  products.value = res.data.content
 }
-
 const arrangeOldToNew = async () => {
   const res = await productService.findAllProductOrderByAsc()
   products.value = res.data

@@ -5,23 +5,23 @@ import org.example.shoesshopbe.Model.Products;
 import org.example.shoesshopbe.Repo.ProductRepo;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SitebarService {
     @Autowired
     private ProductRepo productRepo;
 
-    public List<ProductResponse> findAllProducts(List<String> discount, String gender,
+    public Page<ProductResponse> findAllProducts(List<String> discount, String gender,
                                                  List<String> brand, List<String> collection,
                                                  List<String> color, List<String> priceRanges,
-                                                 String keyword
+                                                 String keyword,Pageable pageable
     ) {
         Specification<Products> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
@@ -79,14 +79,14 @@ public class SitebarService {
             }
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
-        List<Products> productList = productRepo.findAll(spec);
+        Page<Products> productList = productRepo.findAll(spec,pageable );
 
-        return productList.stream().map(product -> new ProductResponse(
+        return productList.map(product -> new ProductResponse(
                 product.getId(),
                 product.getProductName(),
                 product.getBrand().getBrandName(),
                 product.getPrice().toString(),
                 product.getProductImages().get(0).getImageUrl()
-        )).collect(Collectors.toList());
+        ));
     }
 }

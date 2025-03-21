@@ -1,10 +1,14 @@
 package org.example.shoesshopbe.Controller;
 
 import org.example.shoesshopbe.Model.Products;
+import org.example.shoesshopbe.Response.ColorResponse;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.example.shoesshopbe.Service.ProductService;
 import org.example.shoesshopbe.Service.SitebarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +47,12 @@ public class ProductController {
                                              @RequestParam(required = false) List<String> collection,
                                              @RequestParam(required = false) List<String> color,
                                              @RequestParam(required = false) List<String> price,
-                                             @RequestParam(required = false) String keyword
+                                             @RequestParam(required = false) String keyword,
+                                             @RequestParam(defaultValue = "0") Integer page,
+                                             @RequestParam(defaultValue = "16") Integer size
     ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponse> products;
         if (discount!=null && !discount.isEmpty() ||
                 gender != null && !gender.isEmpty() ||
                 brand != null && !brand.isEmpty() ||
@@ -52,11 +60,11 @@ public class ProductController {
                 color != null && !color.isEmpty() ||
                 price != null && !price.isEmpty() ||
                 keyword != null && !keyword.isEmpty()) {
-            List<ProductResponse> pro = sitebarService.findAllProducts(discount, gender, brand, collection, color, price,keyword);
-            return new ResponseEntity<>(pro, HttpStatus.OK);
+            products = sitebarService.findAllProducts(discount, gender, brand, collection, color, price,keyword,pageable);
+            return new ResponseEntity<>(products, HttpStatus.OK);
         }
 
-        List<ProductResponse> products = productService.findAllProduct();
+         products = productService.findAllProduct(pageable);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
@@ -77,5 +85,6 @@ public class ProductController {
         List<ProductResponse> products = productService.findAllProductOrderByPriceAsc();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
 
 }

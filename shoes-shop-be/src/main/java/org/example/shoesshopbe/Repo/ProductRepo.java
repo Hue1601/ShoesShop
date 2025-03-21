@@ -1,11 +1,13 @@
 package org.example.shoesshopbe.Repo;
 
 import org.example.shoesshopbe.Model.Products;
-
 import org.example.shoesshopbe.Response.ProductResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+
 import java.util.List;
 
 public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpecificationExecutor<Products> {
@@ -38,7 +40,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 LEFT JOIN ProductImages img ON p.id = img.product.id
                 ORDER BY p.createdAt DESC
             """)
-    List<ProductResponse> findAllProducts();
+    Page<ProductResponse> findAllProducts(Pageable pageable);
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(

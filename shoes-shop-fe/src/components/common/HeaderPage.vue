@@ -92,7 +92,7 @@ const updateQuery = () => {
 
 const getAll = async () => {
   const res = await productService.getAllProduct()
-  products.value = res.data
+  products.value = res.data.content
 }
 
 const filterProduct = computed(() => {
