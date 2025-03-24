@@ -1,6 +1,7 @@
 package org.example.shoesshopbe.Repo;
 
 import org.example.shoesshopbe.Model.Products;
+import org.example.shoesshopbe.Response.ProductDetailResponse;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -77,4 +78,23 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 ORDER BY p.createdAt DESC
             """)
     List<ProductResponse> getProductBySearch();
+
+    @Query("""
+             SELECT new org.example.shoesshopbe.Response.ProductDetailResponse(
+            p.id, p.productName, b.brandName, Cast(p.price AS String),img.imageUrl,c.colorName,
+            s.sizeValue,pd.stock,d.discountPercentage,p.description) FROM Products p
+                LEFT JOIN p.brand b
+                LEFT JOIN ProductImages img ON p.id = img.product.id
+                LEFT JOIN ProductDetail pd ON p.id = pd.product.id
+                LEFT JOIN Colors c ON pd.color.id = c.id
+                LEFT JOIN Sizes s ON pd.size.id = s.id
+                LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+                LEFT JOIN Discounts d ON pdsc.discount.id = d.id
+                WHERE p.id = :id
+            """)
+    List<ProductDetailResponse> getProductDetail(@Param("id") String id);
+
+
+
 }
+

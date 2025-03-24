@@ -34,5 +34,10 @@ class ProductService {
     const response = await axios.get(`${this.ROOT_API}/search`);
     return response;
   }
+
+  async getProductDetailById(id : number){
+    const response = await axios.get(`${this.ROOT_API}/${id}`);
+    return response;
+  }
 }
 export const productService = new ProductService();

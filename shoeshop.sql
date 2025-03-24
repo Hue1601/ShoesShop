@@ -42,6 +42,7 @@ CREATE TABLE ProductImages (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     ProductID INT FOREIGN KEY REFERENCES Products(ID) ,
     ImageURL NVARCHAR(255) NOT NULL
+	IsThumbnail BIT DEFAULT 0
 );
 CREATE TABLE Carts (
     ID INT IDENTITY(1,1) PRIMARY KEY,
@@ -64,7 +65,6 @@ CREATE TABLE Orders (
     OrderStatus NVARCHAR(50) ,
     CreatedAt DATETIME DEFAULT GETDATE()
 );
-
 
 CREATE TABLE OrderDetails (
     Id INT IDENTITY PRIMARY KEY,
@@ -106,8 +106,6 @@ CREATE TABLE ProductDetails (
     Stock INT NOT NULL,
     SKU NVARCHAR(100) UNIQUE
 );
-
-drop table ProductDetails
 
 CREATE TABLE ProductSize (
   ProductID INT FOREIGN KEY REFERENCES Products(ID),
@@ -230,6 +228,8 @@ join ProductColors pc on pc.ColorID = c.ID
 join Products p on p.ID = pc.ProductID
 where p.ID = 1
 
+
+
 select p.id, p.ProductName,p.Description,p.Price, img.ImageURL
 from Products p
 LEFT JOIN Brands b on b.ID = p.BrandID
@@ -240,10 +240,6 @@ select * from Colors
 select * from Size
 select * from ProductColor
 
-
-select * from size
--- Red, Size 37, còn hàng
-
 select * from ProductDetails
 
 select p.ProductName,b.BrandName,p.Price,p.Description,c.ColorName,s.SizeValue
@@ -253,3 +249,45 @@ LEFT JOIN Colors c on c.ID = pd.ColorId
 LEFT JOIN Size s on s.ID = pd.SizeId
 LEFT JOIN Brands b on b.ID = p.BrandID
 Where p.ID = 1
+
+SELECT 
+    p.ID AS ProductID,
+    p.ProductName,
+    p.Description,
+    p.Price,
+
+    b.BrandName,
+
+    pi.ImageURL,
+
+    c.ColorName,
+    s.SizeValue,
+
+    pd.Stock,
+    pd.SKU,
+
+    d.DiscountPercentage
+
+FROM Products p
+
+-- JOIN Brand
+LEFT JOIN Brands b ON p.BrandID = b.ID
+
+-- JOIN ảnh sản phẩm
+LEFT JOIN ProductImages pi ON p.ID = pi.ProductID
+
+-- JOIN chi tiết sản phẩm
+LEFT JOIN ProductDetails pd ON p.ID = pd.ProductId
+
+-- JOIN màu sắc
+LEFT JOIN Colors c ON pd.ColorId = c.ID
+
+-- JOIN kích thước
+LEFT JOIN Size s ON pd.SizeId = s.ID
+
+-- JOIN giảm giá (nếu có)
+LEFT JOIN ProductDiscounts pdsc ON pdsc.ProductID = p.ID
+LEFT JOIN Discounts d ON pdsc.DiscountID = d.ID
+
+WHERE 
+    p.ID = 1 -- <-- truyền ID sản phẩm cụ thể ở đây

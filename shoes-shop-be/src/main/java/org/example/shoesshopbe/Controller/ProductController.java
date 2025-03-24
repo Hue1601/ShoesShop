@@ -2,6 +2,7 @@ package org.example.shoesshopbe.Controller;
 
 import org.example.shoesshopbe.Model.Products;
 import org.example.shoesshopbe.Response.ColorResponse;
+import org.example.shoesshopbe.Response.ProductDetailResponse;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.example.shoesshopbe.Service.ProductService;
 import org.example.shoesshopbe.Service.SitebarService;
@@ -70,6 +71,7 @@ public class ProductController {
         List<ProductResponse> products =productService.getProductBySearch();
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
+
     @GetMapping("/products-asc")
     public ResponseEntity<?> findAllProductOrderByAsc() {
         List<ProductResponse> products = productService.findAllProductOrderByAsc();
@@ -86,6 +88,12 @@ public class ProductController {
     public ResponseEntity<?> findAllProductOrderByPriceAsc() {
         List<ProductResponse> products = productService.findAllProductOrderByPriceAsc();
         return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getProductById(@PathVariable String id) {
+        List<ProductDetailResponse> product = productService.getProductDetailById(id);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
 

@@ -1,10 +1,11 @@
 <template>
   <Header />
-  <v-container max-width="94%">
+  <v-container max-width="94%"  v-if="productDetail.length">
+<!--    <div v-for="(product,index) in productDetail" :key="index">-->
     <v-row>
       <v-col cols="7">
         <img
-          src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
+          :src="product.imageUrl"
           class="img-product-detail"
           alt=""
           @click="viewLargeImg"
@@ -16,7 +17,6 @@
             show-arrows
             style="padding: 0 !important"
           >
-            >
             <v-slide-group-item v-for="n in 10" :key="n">
               <v-card
                 class="ma-4"
@@ -37,60 +37,47 @@
 
       <v-col cols="5">
         <h2 class="bold-text">
-          Giày Đá Bóng Dành Cho Mọi Loại Sân Nam Nike Zoom Vapor 16 Academy Fg/Mg - Đ
+          {{product.productName}}
         </h2>
-        <p class="brand-name">Nike</p>
+        <p class="brand-name">{{product.brandName}}</p>
         <div class="product-price-detail">
           <p class="discount-price">3.200.500 đ</p>
-          <p class="origin-price">3.200.500 đ</p>
+          <p class="origin-price">{{formatPrice(product.price)}}</p>
           <p class="product-discount-badge">23 %</p>
         </div>
 
-        <div>
+
           <div class="display-quantity">
-            <p class="bold-text">Số lượng</p>
+            <p class="bold-text">{{t('product-detail.quantity')}}</p>
             <v-text-field
               type="number"
               variant="outlined"
               density="compact"
               class="quantity"
+              model-value="1"
             ></v-text-field>
           </div>
-          <p class="bold-text">Màu sắc</p>
 
-          <v-btn class="btn-color">
-            <img
-              src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-              class="list-color-product"
-              alt=""
-            />
-          </v-btn>
-          <v-btn class="btn-color">
-            <img
-              src="../../components/icons/listicon/HQ4199-1.webp"
-              class="list-color-product"
-              alt=""
-            />
-          </v-btn>
-        </div>
+          <p class="bold-text">{{t('product-detail.color')}}</p>
+          <v-btn class="btn-size"  v-for="(color,index) in colors" :key="index">{{color}}</v-btn>
+
+
         <div style="margin-top: 30px">
-          <p class="bold-text">Kích thước</p>
-          <v-btn class="btn-size">37</v-btn>
-          <v-btn class="btn-size">38</v-btn>
-          <v-btn class="btn-size" disabled>39</v-btn>
+          <p class="bold-text">{{t('product-detail.size')}}</p>
+          <v-btn class="btn-size"  v-for="(size,index) in sizes" :key="index">{{size}}</v-btn>
         </div>
 
         <div class="size">
           <img src="../../components/icons/listicon/ruler.png" class="icon-product-detail" alt="" />
-          <span class="size-guide">Hướng dẫn chọn size</span>
+          <span class="size-guide">{{t('product-detail.size-guide')}}</span>
         </div>
 
         <v-row class="btn-action-detail">
           <v-col cols="6">
-            <v-btn class="btn">Mua ngay</v-btn>
+            <v-btn class="btn">{{t('product-detail.btn-buy')}}</v-btn>
           </v-col>
           <v-col cols="6">
-            <v-btn style="border: 1px solid gray">Thêm vào giỏ hàng</v-btn>
+            <v-btn style="border: 1px solid gray">{{t('product-detail.add-to-cart')}}</v-btn>
           </v-col>
         </v-row>
 
@@ -101,7 +88,7 @@
               class="icon-product-detail"
               alt=""
             />
-            <span class="size-guide promotion">Miễn phí giao hàng đơn từ 699k</span>
+            <span class="size-guide promotion">{{t('product-detail.free-shipping')}}</span>
           </div>
 
           <div class="size">
@@ -110,7 +97,7 @@
               class="icon-product-detail"
               alt=""
             />
-            <span class="size-guide promotion">Thanh toán trực tuyến nhanh chóng và an toàn.</span>
+            <span class="size-guide promotion">{{t('product-detail.payment-online')}}</span>
           </div>
 
           <div class="size">
@@ -119,7 +106,7 @@
               class="icon-product-detail"
               alt=""
             />
-            <span class="size-guide promotion">Đổi trả miễn phí đến 30 ngày</span>
+            <span class="size-guide promotion">{{t('product-detail.return')}}</span>
           </div>
 
           <div class="size">
@@ -128,25 +115,20 @@
               class="icon-product-detail"
               alt=""
             />
-            <span class="size-guide promotion">Sản phẩm chính hãng 100%</span>
+            <span class="size-guide promotion">{{t('product-detail.auth-product')}}</span>
           </div>
         </v-sheet>
       </v-col>
     </v-row>
     <v-row>
-      <p class="size-guide product-description">Mô tả sản phẩm</p>
+      <p class="size-guide product-description">{{t('product-detail.description')}}</p>
       <v-divider />
       <div class="discription">
         <h2 class="bold-text">
-          Giày Đá Bóng Dành Cho Mọi Loại Sân Nam Nike Zoom Vapor 16 Academy Fg/Mg - Đ
+         {{product.productName}}
         </h2>
         <p >
-          Lấy cảm hứng từ những đôi giày chạy hiệu suất cao, Giày Sneaker Unisex Adidas Mercedes
-          Lightblaze được thiết kế dành riêng cho người hâm mộ đội đua Mercedes-AMG Formula One.
-          Công nghệ Lightstrike mang đến lớp đệm siêu nhẹ, giúp bạn di chuyển nhanh nhẹn và thoải
-          mái cả ngày. Upper ripstop kết hợp với các lớp phủ da lộn không chỉ gia tăng độ bền mà còn
-          tạo điểm nhấn phong cách. Màu sắc đặc trưng cùng logo Mercedes-AMG F1 thể hiện tinh thần
-          tốc độ, đẳng cấp và mạnh mẽ.
+          {{product.description}}
         </p>
         <h2 class="bold-text" style="margin-top: 20px">Thông số</h2>
 
@@ -157,7 +139,9 @@
         </ul>
       </div>
     </v-row>
-    <h2 class="bold-text related-product" >Sản phẩm liên quan</h2>
+<!--    </div>-->
+
+    <h2 class="bold-text related-product" >{{t('product-detail.product-related')}}</h2>
 
     <v-sheet max-width="100%">
       <v-slide-group class="pa-4" selected-class="bg-success" show-arrows>
@@ -201,11 +185,27 @@
 <script setup lang="ts">
 import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
+import { computed, onMounted, ref } from 'vue'
+import {productService} from '@/services/ProductService.ts'
+import {useRoute} from 'vue-router'
+import {type ProductDetail} from '@/interface/interface.ts'
+import { useI18n } from 'vue-i18n'
 
-import { ref } from 'vue'
+const {t} = useI18n()
+const route = useRoute()
 
+const productDetail = ref<ProductDetail[]>([])
 const showImgProduct = ref(false)
+const product = computed(() => productDetail.value[0] || {})
 
+// Lấy danh sách các màu, size không trùng lặp
+const sizes = computed(() =>
+  [...new Set(productDetail.value.map(p => p.sizeValue))]
+)
+
+const colors = computed(() =>
+  [...new Set(productDetail.value.map(p => p.colorName))]
+)
 const viewLargeImg = () => {
   showImgProduct.value = true
 }
@@ -213,4 +213,18 @@ const viewLargeImg = () => {
 const closeImageModal = () => {
   showImgProduct.value = false
 }
+
+const getProductDetail = async () => {
+  const response = await productService.getProductDetailById(Number(route.params.id));
+   productDetail.value = response.data
+}
+
+const formatPrice = (price:number) =>{
+  return Intl.NumberFormat('vi-Vn',{maximumFractionDigits:0}).format(price) +'đ'
+}
+
+
+onMounted(() =>{
+  getProductDetail()
+})
 </script>

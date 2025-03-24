@@ -32,5 +32,20 @@
     "price-asc": "Giá tăng dần",
     "price-desc": "Giá giảm dần",
     "text-not-found": "Không có sản phẩm nào phù hợp"
-  }
+  },
+   "product-detail": {
+     "quantity" : "Số lượng",
+     "color": "Màu sắc",
+     "size": "Kích thước",
+     "size-guide" : "Hướng dẫn chọn size",
+     "btn-buy": "Mua ngay",
+     "add-to-cart": "Thêm vào giỏ hàng",
+     "free-shipping": "Miễn phí giao hàng đơn từ 699k",
+     "payment-online": "Thanh toán trực tuyến nhanh chóng và an toàn.",
+     "return": "Đổi trả miễn phí đến 30 ngày",
+     "auth-product": "Sản phẩm chính hãng 100%",
+     "description": "Mô tả sản phẩm",
+     "product-related": "Sản phẩm liên quan"
+   }
+
 }
