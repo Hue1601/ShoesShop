@@ -18,4 +18,7 @@ public class ProductImages {
     private Products product;
 
     private String imageUrl;
+
+    @Column(name="IsThumbnail")
+    private boolean isThumbnail;
 }

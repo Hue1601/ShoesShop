@@ -48,12 +48,15 @@ CREATE TABLE Carts (
     UserID INT FOREIGN KEY REFERENCES Users(ID),
     CreatedAt DATETIME DEFAULT GETDATE()
 );
+
 CREATE TABLE CartItems (
-    ID INT IDENTITY(1,1) PRIMARY KEY,
-    CartID INT FOREIGN KEY REFERENCES Carts(ID),
-    ProductID INT FOREIGN KEY REFERENCES Products(ID),
-    Quantity INT NOT NULL 
+    Id INT IDENTITY PRIMARY KEY,
+    CartId INT FOREIGN KEY REFERENCES Carts(Id),
+    ProductDetailId INT FOREIGN KEY REFERENCES ProductDetails(Id),
+    Quantity INT NOT NULL
 );
+
+drop table CartItems
 CREATE TABLE Orders (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     UserID INT FOREIGN KEY REFERENCES Users(ID),
@@ -61,14 +64,17 @@ CREATE TABLE Orders (
     OrderStatus NVARCHAR(50) ,
     CreatedAt DATETIME DEFAULT GETDATE()
 );
+
+
 CREATE TABLE OrderDetails (
-	ID INT IDENTITY(1,1) PRIMARY KEY,
-    OrderID INT FOREIGN KEY REFERENCES Orders(ID) ,
-    ProductID INT FOREIGN KEY REFERENCES Products(ID),
+    Id INT IDENTITY PRIMARY KEY,
+    OrderId INT FOREIGN KEY REFERENCES Orders(Id),
+    ProductDetailId INT FOREIGN KEY REFERENCES ProductDetails(Id),
     Quantity INT NOT NULL,
     Price DECIMAL(18,2) NOT NULL
 );
-drop table Collections
+drop table OrderDetails
+
 CREATE TABLE Collections (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     CollectionName NVARCHAR(100) UNIQUE NOT NULL,
@@ -91,6 +97,29 @@ CREATE TABLE ProductDiscounts (
     DiscountID INT FOREIGN KEY REFERENCES Discounts(ID) ,
     PRIMARY KEY (ProductID, DiscountID)
 );
+
+CREATE TABLE ProductDetails (
+    Id INT IDENTITY PRIMARY KEY,
+    ProductId INT FOREIGN KEY REFERENCES Products(Id),
+    ColorId INT FOREIGN KEY REFERENCES Colors(Id),
+    SizeId INT FOREIGN KEY REFERENCES Size(Id),
+    Stock INT NOT NULL,
+    SKU NVARCHAR(100) UNIQUE
+);
+
+drop table ProductDetails
+
+CREATE TABLE ProductSize (
+  ProductID INT FOREIGN KEY REFERENCES Products(ID),
+  SizeID INT FOREIGN KEY REFERENCES Size(ID),
+   PRIMARY KEY (ProductID, SizeID)
+)
+
+CREATE TABLE Size (
+    ID INT IDENTITY PRIMARY KEY,
+    SizeValue FLOAT NOT NULL
+);
+
 -- Thêm dữ liệu vào bảng Brands
 INSERT INTO Brands (BrandName) VALUES 
 ('Nike'), 
@@ -157,6 +186,25 @@ INSERT INTO ProductDiscounts (ProductID, DiscountID) VALUES
 (5, 2);         -- New Balance 574 giảm 15%
 
 
+insert into Size(SizeValue) values (37)
+insert into Size(SizeValue) values (35)
+insert into Size(SizeValue) values (34)
+insert into Size(SizeValue) values (33)
+
+INSERT INTO ProductDetails (ProductId, ColorId, SizeId, Stock, SKU)
+VALUES (1, 1, 1, 10, 'NIKE-AIRMAX-RED-37');
+
+-- Red, Size 38, hết hàng
+INSERT INTO ProductDetails (ProductId, ColorId, SizeId, Stock, SKU)
+VALUES (1, 1, 2, 0, 'NIKE-AIRMAX-RED-38');
+
+-- Blue, Size 38, còn hàng
+INSERT INTO ProductDetails (ProductId, ColorId, SizeId, Stock, SKU)
+VALUES (1, 2, 2, 5, 'NIKE-AIRMAX-BLUE-38');
+
+-- Blue, Size 39, còn hàng
+INSERT INTO ProductDetails (ProductId, ColorId, SizeId, Stock, SKU)
+VALUES (1, 2, 3, 8, 'NIKE-AIRMAX-BLUE-39');
 
 Select * from Products p join ProductColors pc on p.ID = pc.ProductID join Colors c on c.id= pc.ColorID
 SELECT top 5
@@ -164,9 +212,12 @@ SELECT top 5
     p.ProductName,
     p.BrandID,
     p.Price,
-	pimg.ImageURL
+	pimg.ImageURL,
+	c.ColorName
 FROM Products p
 LEFT JOIN ProductImages pimg ON p.ID = pimg.ProductID
+LEFT JOIN ProductColors pc on pc.ProductID = p.ID
+LEFT JOIN Colors c on c.ID = pc.ColorID
 order by p.CreatedAt desc;
 
 select c.ColorName  from ProductColors pc
@@ -174,3 +225,31 @@ JOIN Products p on p.ID = pc.ProductID
 JOIN Colors c on c.ID = pc.ColorID
 where p.ID = '1'
 
+select * from Colors c
+join ProductColors pc on pc.ColorID = c.ID
+join Products p on p.ID = pc.ProductID
+where p.ID = 1
+
+select p.id, p.ProductName,p.Description,p.Price, img.ImageURL
+from Products p
+LEFT JOIN Brands b on b.ID = p.BrandID
+LEFT JOIN ProductImages img on p.ID = img.ID
+where p.id=1
+select * from ProductImages
+select * from Colors
+select * from Size
+select * from ProductColor
+
+
+select * from size
+-- Red, Size 37, còn hàng
+
+select * from ProductDetails
+
+select p.ProductName,b.BrandName,p.Price,p.Description,c.ColorName,s.SizeValue
+from ProductDetails pd
+LEFT JOIN Products p on p.ID = pd.ProductId
+LEFT JOIN Colors c on c.ID = pd.ColorId
+LEFT JOIN Size s on s.ID = pd.SizeId
+LEFT JOIN Brands b on b.ID = p.BrandID
+Where p.ID = 1

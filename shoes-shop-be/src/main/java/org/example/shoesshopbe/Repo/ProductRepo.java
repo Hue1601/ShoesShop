@@ -18,7 +18,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
                      p.id,  p.productName, b.brandName, Cast(p.price AS String), img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
-                LEFT JOIN ProductImages img ON p.id = img.product.id
+                LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.createdAt DESC LIMIT 5
             """)
     List<ProductResponse> findTop5Product();
@@ -27,7 +27,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
                  p.id,  p.productName, p.brand.brandName, Cast( p.price As string ), img.imageUrl) FROM Products p
                 LEFT JOIN ProductCollections pc ON p.id = pc.product.id
-                 LEFT JOIN ProductImages img ON p.id = img.product.id
+                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 LEFT JOIN Collections c ON pc.collection.id = c.id
                 WHERE c.id = (SELECT id FROM Collections ORDER BY createdAt DESC LIMIT 1)
                 ORDER BY p.createdAt DESC LIMIT 5
@@ -38,7 +38,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
                     p.id, p.productName, b.brandName, Cast(p.price AS String),img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
-                LEFT JOIN ProductImages img ON p.id = img.product.id
+                LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.createdAt DESC
             """)
     Page<ProductResponse> findAllProducts(Pageable pageable);
@@ -47,7 +47,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
                     p.id , p.productName, b.brandName, Cast(p.price AS String), img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
-                LEFT JOIN ProductImages img ON p.id = img.product.id
+                LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.createdAt Asc
             """)
     List<ProductResponse> findAllProductsOrderByAsc();
@@ -56,7 +56,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
                     p.id ,p.productName, b.brandName, Cast(p.price AS String), img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
-                LEFT JOIN ProductImages img ON p.id = img.product.id
+                LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.price Asc
             """)
     List<ProductResponse> findAllProductsOrderByPriceAsc();
@@ -65,7 +65,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
                      p.id,  p.productName, b.brandName, Cast(p.price AS String), img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
-                LEFT JOIN ProductImages img ON p.id = img.product.id
+                LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.price desc""")
     List<ProductResponse> findAllProductsOrderByPriceDesc();
 
@@ -73,7 +73,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
                     p.id, p.productName, b.brandName, Cast(p.price AS String),img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
-                LEFT JOIN ProductImages img ON p.id = img.product.id
+                LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.createdAt DESC
             """)
     List<ProductResponse> getProductBySearch();
