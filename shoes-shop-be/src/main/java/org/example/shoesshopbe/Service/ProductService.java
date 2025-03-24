@@ -38,5 +38,8 @@ public class ProductService {
     public List<ProductResponse> findAllProductOrderByPriceAsc() {
         return productRepo.findAllProductsOrderByPriceAsc();
     }
-
+    
+    public List<ProductResponse> getProductBySearch() {
+        return productRepo.getProductBySearch();
+    }
 }

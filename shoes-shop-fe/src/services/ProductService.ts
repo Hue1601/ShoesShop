@@ -29,5 +29,10 @@ class ProductService {
     const response = await axios.get(`${this.ROOT_API}/price-asc`);
     return response;
   }
+
+  async findProductBySearch(){
+    const response = await axios.get(`${this.ROOT_API}/search`);
+    return response;
+  }
 }
 export const productService = new ProductService();

@@ -91,8 +91,8 @@ const updateQuery = () => {
 }
 
 const getAll = async () => {
-  const res = await productService.getAllProduct()
-  products.value = res.data.content
+  const res = await productService.findProductBySearch()
+  products.value = res.data
 }
 
 const filterProduct = computed(() => {

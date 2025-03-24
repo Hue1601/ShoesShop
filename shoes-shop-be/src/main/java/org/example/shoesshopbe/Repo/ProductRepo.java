@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -68,5 +69,12 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 ORDER BY p.price desc""")
     List<ProductResponse> findAllProductsOrderByPriceDesc();
 
-
+    @Query("""
+                SELECT new org.example.shoesshopbe.Response.ProductResponse(
+                    p.id, p.productName, b.brandName, Cast(p.price AS String),img.imageUrl)  FROM Products p
+                LEFT JOIN p.brand b
+                LEFT JOIN ProductImages img ON p.id = img.product.id
+                ORDER BY p.createdAt DESC
+            """)
+    List<ProductResponse> getProductBySearch();
 }

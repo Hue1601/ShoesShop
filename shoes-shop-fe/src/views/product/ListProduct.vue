@@ -5,12 +5,13 @@
       <Sitebar />
       <div class="list-product">
         <v-text-field
-          v-model="searchQuery"
+          v-model="selectSearch.keyword"
           append-inner-icon="mdi-magnify"
           density="compact"
           label="Tìm kiếm sản phẩm"
           variant="outlined"
           hide-details
+          @change="updateQuery"
         />
 
         <p class="text-arrange" @click="onclickArrange">
@@ -18,7 +19,7 @@
           <v-icon>mdi-chevron-down</v-icon>
         </p>
 
-        <p class="text-not-found" v-if="filteredProducts.length === 0">
+        <p class="text-not-found" v-if="products.length === 0">
           {{ t('list-product.text-not-found') }}
         </p>
         <v-list class="list-arrange" v-if="showListArrange">
@@ -34,7 +35,7 @@
             height="380"
             width="249"
             style="box-shadow: none"
-            v-for="(product, index) in filteredProducts"
+            v-for="(product, index) in products"
             :key="index"
             :to="`/product-detail/${product.id}`"
           >
@@ -66,18 +67,19 @@
 import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
 import Sitebar from '../../components/common/SitebarPage.vue'
-
 import { productService } from '@/services/ProductService.ts'
 import {type Product} from '@/interface/interface.ts'
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useRoute,useRouter } from 'vue-router'
 
+const route = useRoute()
+const router = useRouter()
 const { t } = useI18n()
-
 const showListArrange = ref(false)
 const products = ref<Product[]>([])
-const searchQuery = ref<string>('')
 
+const selectSearch = ref<{ keyword: string }>({ keyword: '' })
 const page = ref(0)
 const size = 4
 const isLoading = ref(false)
@@ -90,10 +92,14 @@ const formatPrice = (price: number) => {
 const onclickArrange = () => {
   showListArrange.value = !showListArrange.value
 }
-import { useRoute } from 'vue-router'
 
-const route = useRoute()
-
+const updateQuery = () => {
+  const params: Record<string, string> = {}
+  if (selectSearch.value.keyword) {
+    params.keyword = selectSearch.value.keyword
+  }
+  router.push({ path: '/list-product', query: params })
+}
 const getAll = async () => {
   if (isLoading.value || !hasMore.value) return
   isLoading.value = true
@@ -136,17 +142,11 @@ const arrangePriceDesc = async () => {
   products.value = res.data
 }
 
-const filteredProducts = computed(() => {
-  if (!products.value) return products.value
-  return products.value.filter((products) =>
-    products.productName.toLowerCase().includes(searchQuery.value.toLowerCase()),
-  )
-})
 const handleScroll = () => {
   const scrollTop = window.scrollY //Lấy vị trí cuộn hiện tại
   const windowHeight = window.innerHeight //Chiều cao vùng hiển thị của trình duyệt (viewport).
   const fullHeight = document.documentElement.scrollHeight //Chiều cao toàn bộ nội dung trang, kể cả phần vượt khỏi vùng hiển thị.
-//Khi người dùng cuộn xuống gần cuối (cách đáy 300px)
+  //Khi người dùng cuộn xuống gần cuối (cách đáy 300px)
   if (scrollTop + windowHeight >= fullHeight - 300) {
     getAll()
   }
