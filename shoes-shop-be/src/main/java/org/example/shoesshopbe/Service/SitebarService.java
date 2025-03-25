@@ -85,7 +85,7 @@ public class SitebarService {
                 product.getId(),
                 product.getProductName(),
                 product.getBrand().getBrandName(),
-                product.getPrice().toString(),
+                product.getPrice(),
                 product.getProductImages().get(0).getImageUrl()
         ));
     }

@@ -17,7 +17,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                     p.id,  p.productName, b.brandName, Cast(p.price AS String), img.imageUrl)  FROM Products p
+                     p.id,  p.productName, b.brandName,p.price, img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.createdAt DESC LIMIT 5
@@ -26,7 +26,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                 p.id,  p.productName, p.brand.brandName, Cast( p.price As string ), img.imageUrl) FROM Products p
+                 p.id,  p.productName, p.brand.brandName,p.price, img.imageUrl) FROM Products p
                 LEFT JOIN ProductCollections pc ON p.id = pc.product.id
                  LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 LEFT JOIN Collections c ON pc.collection.id = c.id
@@ -37,7 +37,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                    p.id, p.productName, b.brandName, Cast(p.price AS String),img.imageUrl)  FROM Products p
+                    p.id, p.productName, b.brandName, p.price,img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.createdAt DESC
@@ -46,7 +46,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                    p.id , p.productName, b.brandName, Cast(p.price AS String), img.imageUrl)  FROM Products p
+                    p.id , p.productName, b.brandName, p.price, img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.createdAt Asc
@@ -55,7 +55,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                    p.id ,p.productName, b.brandName, Cast(p.price AS String), img.imageUrl)  FROM Products p
+                    p.id ,p.productName, b.brandName,p.price, img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.price Asc
@@ -64,7 +64,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                     p.id,  p.productName, b.brandName, Cast(p.price AS String), img.imageUrl)  FROM Products p
+                     p.id,  p.productName, b.brandName, p.price, img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.price desc""")
@@ -72,7 +72,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                    p.id, p.productName, b.brandName, Cast(p.price AS String),img.imageUrl)  FROM Products p
+                    p.id, p.productName, b.brandName, p.price,img.imageUrl)  FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 ORDER BY p.createdAt DESC
@@ -81,7 +81,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
 
     @Query("""
              SELECT new org.example.shoesshopbe.Response.ProductDetailResponse(
-            p.id, p.productName, b.brandName, Cast(p.price AS String),img.imageUrl,c.colorName,
+            p.id, p.productName, b.brandName, p.price,img.imageUrl,c.colorName,
             s.sizeValue,pd.stock,d.discountPercentage,p.description,img.isThumbnail) FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id

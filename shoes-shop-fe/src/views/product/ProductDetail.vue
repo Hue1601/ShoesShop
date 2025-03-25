@@ -3,7 +3,7 @@
   <v-container max-width="94%"  v-if="productDetail.length">
 <!--    <div v-for="(product,index) in productDetail" :key="index">-->
     <v-row>
-      <v-col cols="7">
+      <v-col cols="6">
         <img
           :src="thumbnailImage"
           class="img-product-detail"
@@ -35,15 +35,15 @@
         </v-sheet>
       </v-col>
 
-      <v-col cols="5">
+      <v-col cols="6">
         <h2 class="bold-text">
           {{product.productName}}
         </h2>
         <p class="brand-name">{{product.brandName}}</p>
         <div class="product-price-detail">
-          <p class="discount-price">3.200.500 đ</p>
-          <p class="origin-price">{{formatPrice(product.price)}}</p>
-          <p class="product-discount-badge">23 %</p>
+          <p class="discount-price" v-if="product.discountPercentage">{{formatPrice(product.discountPrice)}}</p>
+          <p :class="{'origin-price': product.discountPercentage}">{{formatPrice(product.price)}}</p>
+          <p class="product-discount-badge" v-if="product.discountPercentage">{{product.discountPercentage}} %</p>
         </div>
 
 
@@ -228,7 +228,7 @@ const getProductDetail = async () => {
 }
 
 const formatPrice = (price:number) =>{
-  return Intl.NumberFormat('vi-Vn',{maximumFractionDigits:0}).format(price) +'đ'
+  return Intl.NumberFormat('vi-Vn',{maximumFractionDigits:0}).format(price) +' đ'
 }
 
 
