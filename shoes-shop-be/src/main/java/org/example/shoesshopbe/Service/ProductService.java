@@ -1,9 +1,6 @@
 package org.example.shoesshopbe.Service;
 
-import org.example.shoesshopbe.Model.Products;
-import org.example.shoesshopbe.Repo.ColorRepo;
 import org.example.shoesshopbe.Repo.ProductRepo;
-import org.example.shoesshopbe.Response.ColorResponse;
 import org.example.shoesshopbe.Response.ProductDetailResponse;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.springframework.beans.factory.annotation.Autowired;

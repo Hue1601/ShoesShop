@@ -57,7 +57,6 @@ CREATE TABLE CartItems (
     Quantity INT NOT NULL
 );
 
-drop table CartItems
 CREATE TABLE Orders (
     ID INT IDENTITY(1,1) PRIMARY KEY,
     UserID INT FOREIGN KEY REFERENCES Users(ID),
@@ -73,7 +72,6 @@ CREATE TABLE OrderDetails (
     Quantity INT NOT NULL,
     Price DECIMAL(18,2) NOT NULL
 );
-drop table OrderDetails
 
 CREATE TABLE Collections (
     ID INT IDENTITY(1,1) PRIMARY KEY,
@@ -255,39 +253,23 @@ SELECT
     p.ProductName,
     p.Description,
     p.Price,
-
     b.BrandName,
-
     pi.ImageURL,
-
     c.ColorName,
     s.SizeValue,
-
     pd.Stock,
-    pd.SKU,
-
     d.DiscountPercentage
-
 FROM Products p
-
--- JOIN Brand
 LEFT JOIN Brands b ON p.BrandID = b.ID
-
--- JOIN ảnh sản phẩm
 LEFT JOIN ProductImages pi ON p.ID = pi.ProductID
-
--- JOIN chi tiết sản phẩm
 LEFT JOIN ProductDetails pd ON p.ID = pd.ProductId
-
--- JOIN màu sắc
 LEFT JOIN Colors c ON pd.ColorId = c.ID
-
--- JOIN kích thước
 LEFT JOIN Size s ON pd.SizeId = s.ID
-
--- JOIN giảm giá (nếu có)
 LEFT JOIN ProductDiscounts pdsc ON pdsc.ProductID = p.ID
 LEFT JOIN Discounts d ON pdsc.DiscountID = d.ID
-
 WHERE 
-    p.ID = 1 -- <-- truyền ID sản phẩm cụ thể ở đây
+    p.ID = 1
+
+select * from Products p
+left join ProductImages img on p.ID= img.ProductID
+where p.ID=1
