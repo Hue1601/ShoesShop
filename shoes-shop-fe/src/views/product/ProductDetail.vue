@@ -1,14 +1,13 @@
 <template>
   <Header />
   <v-container max-width="94%"  v-if="productDetail.length">
-<!--    <div v-for="(product,index) in productDetail" :key="index">-->
     <v-row>
-      <v-col cols="6">
+      <v-col cols="6" >
         <img
           :src="thumbnailImage"
           class="img-product-detail"
           alt=""
-          @click="viewLargeImg"
+          @click="viewLargeImg(thumbnailImage)"
         />
         <v-sheet max-width="100%">
           <v-slide-group
@@ -28,6 +27,7 @@
                   :src="img"
                   class="list-img-detail"
                   alt=""
+                  @click="viewLargeImg(img)"
                 />
               </v-card>
             </v-slide-group-item>
@@ -173,7 +173,7 @@
           @click="closeImageModal"
         />
         <img
-          src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
+          :src="imgLightBox"
           class="large-img"
           alt=""
         />
@@ -196,6 +196,7 @@ const route = useRoute()
 
 const productDetail = ref<ProductDetail[]>([])
 const showImgProduct = ref(false)
+const imgLightBox = ref("")
 const product = computed(() => productDetail.value[0] || {})
 
 // Lấy danh sách các màu, size không trùng lặp
@@ -214,7 +215,9 @@ const thumbnailImage = computed(() =>
 const additionalImages = computed(() =>
   [...new Set(productDetail.value.filter(p => !p.isThumbnail).map(p => p.imageUrl))]
 )
-const viewLargeImg = () => {
+const viewLargeImg = (img:string) => {
+  console.log("hue" + img)
+  imgLightBox.value = img
   showImgProduct.value = true
 }
 
