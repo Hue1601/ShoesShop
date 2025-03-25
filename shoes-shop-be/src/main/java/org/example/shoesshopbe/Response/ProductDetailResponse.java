@@ -18,4 +18,5 @@ public class ProductDetailResponse {
     private Integer stock;
     private Float discountPercentage;
     private String description;
+    private Boolean isThumbnail;
 }

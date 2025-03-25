@@ -28,5 +28,6 @@ export interface ProductDetail {
   productName: string
   sizeValue: number
   stockValue: number,
-  description:string
+  description:string,
+  isThumbnail: boolean
 }

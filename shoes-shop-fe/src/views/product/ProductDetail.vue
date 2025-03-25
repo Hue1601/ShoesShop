@@ -5,7 +5,7 @@
     <v-row>
       <v-col cols="7">
         <img
-          :src="product.imageUrl"
+          :src="thumbnailImage"
           class="img-product-detail"
           alt=""
           @click="viewLargeImg"
@@ -17,7 +17,7 @@
             show-arrows
             style="padding: 0 !important"
           >
-            <v-slide-group-item v-for="n in 10" :key="n">
+            <v-slide-group-item v-for="(img, index) in additionalImages" :key="index">
               <v-card
                 class="ma-4"
                 height="100"
@@ -25,7 +25,7 @@
                 style="box-shadow: none; margin: 6px !important"
               >
                 <img
-                  src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
+                  :src="img"
                   class="list-img-detail"
                   alt=""
                 />
@@ -205,6 +205,14 @@ const sizes = computed(() =>
 
 const colors = computed(() =>
   [...new Set(productDetail.value.map(p => p.colorName))]
+)
+
+const thumbnailImage = computed(() =>
+  productDetail.value.find(p => p.isThumbnail)?.imageUrl || ''
+)
+
+const additionalImages = computed(() =>
+  [...new Set(productDetail.value.filter(p => !p.isThumbnail).map(p => p.imageUrl))]
 )
 const viewLargeImg = () => {
   showImgProduct.value = true
