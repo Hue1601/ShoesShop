@@ -92,7 +92,7 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
                 LEFT JOIN Discounts d ON pdsc.discount.id = d.id
                 WHERE p.id = :id
             """)
-    List<ProductDetailResponse> getProductDetail(@Param("id") String id);
+    List<ProductDetailResponse> getProductDetail(@Param("id") Integer id);
 
 
 

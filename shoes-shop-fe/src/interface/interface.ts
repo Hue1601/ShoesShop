@@ -32,3 +32,8 @@ export interface ProductDetail {
   isThumbnail: boolean,
   discountPrice: number
 }
+export interface SizeByColor{
+  stock: number
+  colorName: string
+  size: number
+}

@@ -39,5 +39,11 @@ class ProductService {
     const response = await axios.get(`${this.ROOT_API}/${id}`);
     return response;
   }
+  async getSizeByColor(id : number,color:string){
+    const response = await axios.get(`${this.ROOT_API}/${id}`, {
+      params: { color },
+    })
+    return response;
+  }
 }
 export const productService = new ProductService();

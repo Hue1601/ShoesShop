@@ -81,7 +81,7 @@ const products = ref<Product[]>([])
 
 const selectSearch = ref<{ keyword: string }>({ keyword: '' })
 const page = ref(0)
-const size = 4
+const size = 16
 const isLoading = ref(false)
 const hasMore = ref(true)
 
@@ -100,6 +100,7 @@ const updateQuery = () => {
   }
   router.push({ path: '/list-product', query: params })
 }
+
 const getAll = async () => {
   if (isLoading.value || !hasMore.value) return
   isLoading.value = true
@@ -133,10 +134,12 @@ const arrangeOldToNew = async () => {
   const res = await productService.findAllProductOrderByAsc()
   products.value = res.data
 }
+
 const arrangePriceAsc = async () => {
   const res = await productService.findAllProductOrderByPriceAsc()
   products.value = res.data
 }
+
 const arrangePriceDesc = async () => {
   const res = await productService.findAllProductOrderByPriceDesc()
   products.value = res.data

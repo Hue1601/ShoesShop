@@ -102,14 +102,7 @@ CREATE TABLE ProductDetails (
     ColorId INT FOREIGN KEY REFERENCES Colors(Id),
     SizeId INT FOREIGN KEY REFERENCES Size(Id),
     Stock INT NOT NULL,
-    SKU NVARCHAR(100) UNIQUE
 );
-
-CREATE TABLE ProductSize (
-  ProductID INT FOREIGN KEY REFERENCES Products(ID),
-  SizeID INT FOREIGN KEY REFERENCES Size(ID),
-   PRIMARY KEY (ProductID, SizeID)
-)
 
 CREATE TABLE Size (
     ID INT IDENTITY PRIMARY KEY,
@@ -255,6 +248,7 @@ SELECT
     p.Price,
     b.BrandName,
     pi.ImageURL,
+	pi.IsThumbnail,
     c.ColorName,
     s.SizeValue,
     pd.Stock,
@@ -270,6 +264,6 @@ LEFT JOIN Discounts d ON pdsc.DiscountID = d.ID
 WHERE 
     p.ID = 1
 
-select * from Products p
+select * from ProductImages p
 left join ProductImages img on p.ID= img.ProductID
 where p.ID=1

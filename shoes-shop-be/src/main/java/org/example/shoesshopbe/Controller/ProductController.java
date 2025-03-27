@@ -1,7 +1,9 @@
 package org.example.shoesshopbe.Controller;
 
+import org.example.shoesshopbe.Model.ProductDetail;
 import org.example.shoesshopbe.Response.ProductDetailResponse;
 import org.example.shoesshopbe.Response.ProductResponse;
+import org.example.shoesshopbe.Response.SizeByColorResponse;
 import org.example.shoesshopbe.Service.ProductService;
 import org.example.shoesshopbe.Service.SitebarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,11 +89,16 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getProductById(@PathVariable String id) {
+    
+    @GetMapping(value = "/{id}", params = "!color" )
+    public ResponseEntity<?> getProductById(@PathVariable Integer id) {
         List<ProductDetailResponse> product = productService.getProductDetailById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
-
+    @GetMapping(value ="/{id}",params = "color")
+    public ResponseEntity<?> getProductByColor(@PathVariable Integer id,@RequestParam String color) {
+        List<SizeByColorResponse> product = productService.findSizeByColor(id,color);
+        return new ResponseEntity<>(product, HttpStatus.OK);
+    }
 }

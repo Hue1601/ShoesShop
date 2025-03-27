@@ -337,6 +337,12 @@
     display: flex;
     flex-wrap: wrap
 }
+.is-click-btn{
+    box-shadow: none !important;
+    border: 1px solid !important;
+    margin: 10px 10px 0 0;
+    background: oklch(0.837 0.128 66.29) !important;
+}
 /*payment*/
 .input-location{
     display: flex;
