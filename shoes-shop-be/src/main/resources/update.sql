@@ -5,4 +5,5 @@ ALTER TABLE Collections
 Alter TABLE Brands ADD Logo NVARCHAR(MAX)
 
 Alter table ProductImages add IsThumbnail Bit DEFAULT 0
-
+ALTER TABLE ProductDetails
+    DROP COLUMN SKU;
