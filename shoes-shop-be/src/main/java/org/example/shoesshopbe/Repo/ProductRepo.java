@@ -82,17 +82,33 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
     @Query("""
              SELECT new org.example.shoesshopbe.Response.ProductDetailResponse(
             p.id, p.productName, b.brandName, p.price,img.imageUrl,c.colorName,
-            s.sizeValue,pd.stock,d.discountPercentage,p.description,img.isThumbnail) FROM Products p
+            s.sizeValue,pd.stock,d.discountPercentage,p.description,pc.category.id,img.isThumbnail) FROM Products p
                 LEFT JOIN p.brand b
+    
                 LEFT JOIN ProductImages img ON p.id = img.product.id
                 LEFT JOIN ProductDetail pd ON p.id = pd.product.id
                 LEFT JOIN Colors c ON pd.color.id = c.id
                 LEFT JOIN Sizes s ON pd.size.id = s.id
                 LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
                 LEFT JOIN Discounts d ON pdsc.discount.id = d.id
+               LEFT JOIN ProductCategory pc ON p.id = pc.product.id
                 WHERE p.id = :id
             """)
     List<ProductDetailResponse> getProductDetail(@Param("id") Integer id);
+
+    @Query("""
+    SELECT new org.example.shoesshopbe.Response.ProductResponse(
+         p.id,  p.productName, b.brandName, p.price, img.imageUrl)
+    FROM Products p
+    LEFT JOIN p.brand b
+    LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
+    LEFT JOIN ProductCategory pc ON p.id = pc.product.id
+    WHERE pc.category.id = :categoryId AND p.id <> :productId
+    ORDER BY p.createdAt DESC
+""")
+    List<ProductResponse> getProductRelated(@Param("categoryId") Integer categoryId,
+                                            @Param("productId") Integer productId,
+                                            Pageable pageable);
 
 
 

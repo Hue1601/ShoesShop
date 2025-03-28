@@ -153,24 +153,19 @@
         </ul>
       </div>
     </v-row>
-    <!--    </div>-->
 
+    <!--related-product-->
     <h2 class="bold-text related-product">{{ t('product-detail.product-related') }}</h2>
-
     <v-sheet max-width="100%">
       <v-slide-group class="pa-4" selected-class="bg-success" show-arrows>
-        <v-slide-group-item v-for="n in 10" :key="n">
+        <v-slide-group-item v-for="product in relatedProduct" :key="product.id">
           <v-card class="ma-4 box-shadow" height="380" width="230">
             <div class=" ">
-              <img
-                src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-                class="img-product"
-                alt=""
-              />
+              <img :src="product.imageUrl" class="img-product" alt="" />
               <v-btn class="mx-1" icon width="20" height="20"></v-btn>
-              <p class="brand-product">Giày thể thao nam</p>
-              <p class="brand-name">Nike</p>
-              <p>1.200.000 đ</p>
+              <p class="brand-product">{{ product.productName }}</p>
+              <p class="brand-name">{{ product.brandName }}</p>
+              <p>{{ formatPrice(product.price) }}</p>
             </div>
           </v-card>
         </v-slide-group-item>
@@ -198,7 +193,7 @@ import Footer from '../../components/common/FooterPage.vue'
 import { computed, onMounted, ref } from 'vue'
 import { productService } from '@/services/ProductService.ts'
 import { useRoute } from 'vue-router'
-import { type ProductDetail,type SizeByColor } from '@/interface/interface.ts'
+import { type ProductDetail, type SizeByColor, type Product } from '@/interface/interface.ts'
 import { useI18n } from 'vue-i18n'
 import router from '@/router'
 
@@ -212,6 +207,9 @@ const product = computed(() => productDetail.value[0] || {})
 
 const selectedColor = ref<number | null>(null)
 const selectedSize = ref<number | null>(null)
+
+const relatedProduct = ref<Product[]>([])
+
 // Lấy danh sách các màu, size không trùng lặp
 const sizes = computed(() => [...new Set(productDetail.value.map((p) => p.sizeValue))])
 
@@ -261,7 +259,7 @@ const updateParam = () => {
   const params: Record<string, string> = {}
 
   if (colorParam.value.color) {
-    params.color =colorParam.value.color.toString()
+    params.color = colorParam.value.color.toString()
   }
 
   router.push({
@@ -274,16 +272,20 @@ const filteredSizes = computed(() => {
   if (sizeByColor.value.length === 0) {
     return sizes.value.map((s) => ({
       size: s,
-      stock: 1
+      stock: 1,
     }))
   }
   return sizeByColor.value
 })
+
+const getRelatedProduct = async () => {
+  const id = parseInt(route.params.id as string)
+  const product = await productService.getRelatedProduct(id)
+  relatedProduct.value = product.data
+}
 onMounted(() => {
   getProductDetail().then(() => {
-    const queryColor = Array.isArray(route.query.color)
-      ? route.query.color[0]
-      : route.query.color
+    const queryColor = Array.isArray(route.query.color) ? route.query.color[0] : route.query.color
 
     if (queryColor) {
       colorParam.value.color = queryColor
@@ -293,7 +295,6 @@ onMounted(() => {
       selectedColor.value = index !== -1 ? index : null
     }
   })
+  getRelatedProduct()
 })
-
-
 </script>

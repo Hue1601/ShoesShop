@@ -9,6 +9,7 @@ import org.example.shoesshopbe.Response.ProductResponse;
 import org.example.shoesshopbe.Response.SizeByColorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,14 @@ public class ProductService {
         return productRepo.getProductDetail(id);
     }
 
+    public List<ProductResponse> getProductRelated(Integer id) {
+        List<ProductDetailResponse> detail = productRepo.getProductDetail(id);
+        Integer categoryId = detail.get(0).getCategoryId();
+        Pageable limit = PageRequest.of(0, 5);
+        List<ProductResponse> relatedProducts = productRepo.getProductRelated(categoryId, id, limit);
+        return relatedProducts;
+    }
+    
     public List<SizeByColorResponse> findSizeByColor(Integer productId, String color) {
         Specification<ProductDetail> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

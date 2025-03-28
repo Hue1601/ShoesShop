@@ -45,5 +45,12 @@ class ProductService {
     })
     return response;
   }
+  async getRelatedProduct(productId:number){
+    const response = await axios.get(`${this.ROOT_API}/related-product`,{
+      params: { productId }
+      }
+    )
+    return response;
+  }
 }
 export const productService = new ProductService();

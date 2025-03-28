@@ -30,7 +30,8 @@ export interface ProductDetail {
   stockValue: number,
   description:string,
   isThumbnail: boolean,
-  discountPrice: number
+  discountPrice: number,
+  categoryId: number,
 }
 export interface SizeByColor{
   stock: number

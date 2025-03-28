@@ -1,6 +1,5 @@
 package org.example.shoesshopbe.Response;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +21,7 @@ public class ProductDetailResponse {
     private Float discountPercentage;
     private String description;
     private Boolean isThumbnail;
+    private Integer categoryId;
     private BigDecimal discountPrice; 
 
     public ProductDetailResponse(
@@ -35,6 +35,7 @@ public class ProductDetailResponse {
             Integer stock,
             Float discountPercentage,
             String description,
+            Integer categoryId,
             Boolean isThumbnail
     ) {
         this.id = id;
@@ -48,7 +49,7 @@ public class ProductDetailResponse {
         this.discountPercentage = discountPercentage;
         this.description = description;
         this.isThumbnail = isThumbnail;
-
+         this.categoryId = categoryId;
         if (discountPercentage != null && price != null) {
             BigDecimal discount = BigDecimal.valueOf(100 - discountPercentage)
                     .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);

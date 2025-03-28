@@ -89,7 +89,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
-    
+
     @GetMapping(value = "/{id}", params = "!color" )
     public ResponseEntity<?> getProductById(@PathVariable Integer id) {
         List<ProductDetailResponse> product = productService.getProductDetailById(id);
@@ -101,4 +101,11 @@ public class ProductController {
         List<SizeByColorResponse> product = productService.findSizeByColor(id,color);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
+
+    @GetMapping("/related-product")
+    public ResponseEntity<?> getProductRelatedByProductId(@RequestParam Integer productId) {
+        List<ProductResponse> products = productService.getProductRelated(productId);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
 }
