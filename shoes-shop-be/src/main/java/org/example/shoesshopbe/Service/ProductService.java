@@ -66,7 +66,7 @@ public class ProductService {
         List<ProductResponse> relatedProducts = productRepo.getProductRelated(categoryId, id, limit);
         return relatedProducts;
     }
-    
+
     public List<SizeByColorResponse> findSizeByColor(Integer productId, String color) {
         Specification<ProductDetail> spec = (root, query, criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();

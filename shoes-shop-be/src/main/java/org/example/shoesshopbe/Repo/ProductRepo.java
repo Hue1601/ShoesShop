@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpecificationExecutor<Products> {
     List<Products> findTop5ByOrderByCreatedAtDesc();
@@ -81,10 +82,9 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
 
     @Query("""
              SELECT new org.example.shoesshopbe.Response.ProductDetailResponse(
-            p.id, p.productName, b.brandName, p.price,img.imageUrl,c.colorName,
+            pd.id, p.productName, b.brandName, p.price,img.imageUrl,c.colorName,
             s.sizeValue,pd.stock,d.discountPercentage,p.description,pc.category.id,img.isThumbnail) FROM Products p
                 LEFT JOIN p.brand b
-    
                 LEFT JOIN ProductImages img ON p.id = img.product.id
                 LEFT JOIN ProductDetail pd ON p.id = pd.product.id
                 LEFT JOIN Colors c ON pd.color.id = c.id
@@ -109,8 +109,5 @@ public interface ProductRepo extends JpaRepository<Products, Integer> , JpaSpeci
     List<ProductResponse> getProductRelated(@Param("categoryId") Integer categoryId,
                                             @Param("productId") Integer productId,
                                             Pageable pageable);
-
-
-
 }
 

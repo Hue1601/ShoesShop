@@ -31,7 +31,7 @@ public class UserController {
         if (user == null) {
             throw new AuthenticationException(MessageError.INVALID_USERNAME, HttpStatus.UNAUTHORIZED);
         }
-        return  ResponseEntity.status(HttpStatus.OK).body(MessageError.SUCCESSFUL);
+        return  ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
     @PostMapping("/register")

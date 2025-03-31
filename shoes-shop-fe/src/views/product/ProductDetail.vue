@@ -57,13 +57,16 @@
             model-value="1"
           ></v-text-field>
         </div>
-
+        <div class="d-flex brand-name">
+          <p>Số lượng còn lại:</p>
+          <p v-for="(size, index) in filteredSizes" :key="index"> {{size.stock  }}</p>
+        </div>
         <p class="bold-text">{{ t('product-detail.color') }}</p>
         <v-btn
-          :class="selectedColor === index ? 'is-click-btn' : 'btn-size'"
+          :class="selectedColor === color ? 'is-click-btn' : 'btn-size'"
           v-for="(color, index) in colors"
           :key="index"
-          @click="changeColor(index, color)"
+          @click="changeColor(color)"
         >
           {{ color }}
         </v-btn>
@@ -73,8 +76,8 @@
           <v-btn
             v-for="(size, index) in filteredSizes"
             :key="index"
-            :class="selectedSize === index ? 'is-click-btn' : 'btn-size'"
-            @click="changeSize(index)"
+            :class="selectedSize === size ? 'is-click-btn' : 'btn-size'"
+            @click="changeSize(size)"
             :disabled="size.stock === 0"
           >
             {{ size.size }}
@@ -91,7 +94,7 @@
             <v-btn class="btn">{{ t('product-detail.btn-buy') }}</v-btn>
           </v-col>
           <v-col cols="6">
-            <v-btn style="border: 1px solid gray">{{ t('product-detail.add-to-cart') }}</v-btn>
+            <v-btn style="border: 1px solid gray" @click="addToCart">{{ t('product-detail.add-to-cart') }}</v-btn>
           </v-col>
         </v-row>
 
@@ -134,6 +137,7 @@
         </v-sheet>
       </v-col>
     </v-row>
+
     <v-row>
       <p class="size-guide product-description">{{ t('product-detail.description') }}</p>
       <v-divider />
@@ -184,6 +188,7 @@
         <img :src="imgLightBox" class="large-img" alt="" />
       </div>
     </v-sheet>
+
   </v-container>
   <Footer />
 </template>
@@ -192,6 +197,7 @@ import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
 import { computed, onMounted, ref } from 'vue'
 import { productService } from '@/services/ProductService.ts'
+import {cartService} from '@/services/CartService.ts'
 import { useRoute } from 'vue-router'
 import { type ProductDetail, type SizeByColor, type Product } from '@/interface/interface.ts'
 import { useI18n } from 'vue-i18n'
@@ -205,8 +211,11 @@ const showImgProduct = ref(false)
 const imgLightBox = ref('')
 const product = computed(() => productDetail.value[0] || {})
 
-const selectedColor = ref<number | null>(null)
-const selectedSize = ref<number | null>(null)
+// const selectedColor = ref<number | null>(null)
+const selectedColor = ref<string | null>(null);
+
+const selectedSize = ref<string | null>(null);
+const sizeByColor = ref<SizeByColor[]>([])
 
 const relatedProduct = ref<Product[]>([])
 
@@ -237,22 +246,25 @@ const colorParam = ref<{ color: string }>({
 const getProductDetail = async () => {
   const response = await productService.getProductDetailById(Number(route.params.id))
   productDetail.value = response.data
+  console.log("detail " + JSON.stringify(productDetail.value));
+
 }
 
 const formatPrice = (price: number) => {
   return Intl.NumberFormat('vi-Vn', { maximumFractionDigits: 0 }).format(price) + ' đ'
 }
-const sizeByColor = ref<SizeByColor[]>([])
-const changeColor = async (index: number, color: string) => {
-  selectedColor.value = index
+
+const changeColor = async ( color: string) => {
+  selectedColor.value = color
   colorParam.value.color = color
   updateParam()
 
   const res = await productService.getSizeByColor(Number(route.params.id), color)
   sizeByColor.value = res.data
 }
-const changeSize = (index: number) => {
-  selectedSize.value = index
+const changeSize = (size: string) => {
+  selectedSize.value = size
+  console.log("size" + JSON.stringify(size))
 }
 
 const updateParam = () => {
@@ -283,16 +295,45 @@ const getRelatedProduct = async () => {
   const product = await productService.getRelatedProduct(id)
   relatedProduct.value = product.data
 }
+
+const addToCart = async () => {
+  const userId = Number(localStorage.getItem("userId"));
+  const productId = selectedProductId.value;
+  if (!productId) {
+    console.error("Không tìm thấy sản phẩm phù hợp!");
+    return;
+  }
+  const quantity = 1;
+  await cartService.addToCart( productId, quantity,userId);
+};
+
+
+
+const selectedProductId = computed(() => {
+  if (!selectedColor.value || !selectedSize.value) {
+    console.error("Màu sắc hoặc kích thước chưa được chọn!");
+    return null;
+  }
+
+  const selectedSizeValue = Number(selectedSize.value.size);
+
+  const selectedProduct = productDetail.value.find((p) => {
+    return (
+      p.colorName === selectedColor.value &&
+      p.sizeValue === selectedSizeValue
+    );
+  });
+
+  return selectedProduct ? selectedProduct.id : null;
+});
+
 onMounted(() => {
   getProductDetail().then(() => {
     const queryColor = Array.isArray(route.query.color) ? route.query.color[0] : route.query.color
 
     if (queryColor) {
       colorParam.value.color = queryColor
-
-      // Tìm index tương ứng với color trong danh sách colors
-      const index = colors.value.findIndex((color) => color === queryColor)
-      selectedColor.value = index !== -1 ? index : null
+      selectedColor.value = queryColor;
     }
   })
   getRelatedProduct()
