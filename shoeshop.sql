@@ -50,7 +50,8 @@ CREATE TABLE Carts (
     UserID INT FOREIGN KEY REFERENCES Users(ID),
     CreatedAt DATETIME DEFAULT GETDATE()
 );
-
+select * from Users 
+insert into Carts(UserID) values (2)
 CREATE TABLE CartItems (
     Id INT IDENTITY PRIMARY KEY,
     CartId INT FOREIGN KEY REFERENCES Carts(Id),
@@ -229,3 +230,30 @@ LEFT JOIN ProductCategory pc on pc.ProductID = p.ID
 WHERE pc.CategoryID=1
 order by p.CreatedAt desc;
 
+select *from Carts 
+select p.ProductName,p.Price,ci.Quantity from CartItems ci
+LEFT JOIN ProductDetails pd on pd.Id = ci.Id
+LEFT JOIN Products p on pd.ProductId = p.ID
+LEFT JOIN Carts c on c.ID = ci.CartId
+LEFT JOIN Users u on u.Id = c.UserID
+WHERE u.id = 11
+sl
+SELECT * FROM ProductDetails WHERE Id = 6;
+
+SELECT 
+    p.ProductName, 
+    p.Price, 
+	 p.BrandID,
+    ci.Quantity,
+    col.ColorName,
+    s.SizeValue,
+	pimg.ImageURL
+FROM CartItems ci
+LEFT JOIN ProductDetails pd ON pd.Id = ci.ProductDetailId 
+LEFT JOIN Products p ON pd.ProductId = p.ID
+LEFT JOIN Colors col ON pd.ColorId = col.ID
+LEFT JOIN Size s ON pd.SizeId = s.ID
+LEFT JOIN Carts c ON c.ID = ci.CartId
+LEFT JOIN Users u ON u.Id = c.UserID
+LEFT JOIN ProductImages pimg ON p.ID = pimg.ProductID AND pimg.IsThumbnail=1
+WHERE u.id = 11;

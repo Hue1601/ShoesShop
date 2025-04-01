@@ -246,8 +246,6 @@ const colorParam = ref<{ color: string }>({
 const getProductDetail = async () => {
   const response = await productService.getProductDetailById(Number(route.params.id))
   productDetail.value = response.data
-  console.log("detail " + JSON.stringify(productDetail.value));
-
 }
 
 const formatPrice = (price: number) => {
@@ -264,7 +262,6 @@ const changeColor = async ( color: string) => {
 }
 const changeSize = (size: string) => {
   selectedSize.value = size
-  console.log("size" + JSON.stringify(size))
 }
 
 const updateParam = () => {
