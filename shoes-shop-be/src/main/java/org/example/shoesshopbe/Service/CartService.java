@@ -1,17 +1,12 @@
 package org.example.shoesshopbe.Service;
 
-import org.example.shoesshopbe.Model.CartItems;
-import org.example.shoesshopbe.Model.Carts;
-import org.example.shoesshopbe.Model.Products;
-import org.example.shoesshopbe.Model.Users;
-import org.example.shoesshopbe.Repo.CartItemRepo;
-import org.example.shoesshopbe.Repo.CartRepo;
-import org.example.shoesshopbe.Repo.ProductRepo;
-import org.example.shoesshopbe.Repo.UserRepo;
+import org.example.shoesshopbe.Model.*;
+import org.example.shoesshopbe.Repo.*;
+import org.example.shoesshopbe.Response.CartResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class CartService {
@@ -24,9 +19,14 @@ public class CartService {
     @Autowired
     private CartItemRepo cartItemRepo;
 
-    @Autowired
-    private ProductRepo productRepo;
 
+    @Autowired
+    private ProductDetailRepo productDetailRepo;
+
+    public List<CartResponse> getCart(Integer userId) {
+        List<CartResponse> carts = cartRepo.getCart(userId);
+        return carts;
+    }
 
     public void addToCart(Integer userId, Integer productId, Integer quantity) {
         // Lấy thông tin user (nếu không có thì báo lỗi)
@@ -42,7 +42,10 @@ public class CartService {
                 });
 
         // Lấy sản phẩm (nếu không có thì báo lỗi)
-        Products product = productRepo.findById(productId)
+//        Products product = productRepo.findById(productId)
+//                .orElseThrow(() -> new RuntimeException("Product not found"));
+
+        ProductDetail product = productDetailRepo.findById(productId)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
         // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
@@ -58,4 +61,25 @@ public class CartService {
         // Lưu thông tin sản phẩm vào giỏ hàng
         cartItemRepo.save(cartItems);
     }
+
+    public void updateCartItem(Integer productDetailId,Integer quantity) {
+        CartItems cartItems = cartItemRepo.findByProductId(productDetailId)
+                .orElseThrow(() -> new RuntimeException("Product detail not found"));
+        cartItems.setQuantity(quantity);
+        cartItemRepo.save(cartItems);
+    }
+
+    public void deleteProductCart(Integer productDetailId) {
+        CartItems productDetail = cartItemRepo.findByProductId(productDetailId)
+                .orElseThrow(() -> new RuntimeException("Product detail not found"));
+        cartItemRepo.deleteById(productDetail.getId());
+    }
+//    public void updateCartItem(Integer productDetailId, Integer quantity) {
+//        CartItems cartItem = cartItemRepo.findByProductDetailId(productDetailId)
+//                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm trong giỏ hàng"));
+//
+//        cartItem.setQuantity(quantity);
+//        cartRepository.save(cartItem);
+//    }
+
 }

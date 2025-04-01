@@ -105,6 +105,8 @@
 }
 .product-in-cart{
     flex-grow: 1;
+    max-height: 465px;
+    overflow-y: auto;
 }
 .product-cart{
     display: flex;
@@ -161,7 +163,6 @@
 }
 .name-product-cart{
     font-weight: bold;
-    color: gray;
     font-size: 14px;
 }
 .product-price{
@@ -179,6 +180,13 @@
 .total-price{
     font-weight: bold;
     text-align: end
+}
+.attribute-product{
+    background: #dadada;
+    width: fit-content;
+    border-radius: 8px;
+    padding: 3px;
+    font-size: 12px;
 }
 /*Site bar*/
 .custom-select {

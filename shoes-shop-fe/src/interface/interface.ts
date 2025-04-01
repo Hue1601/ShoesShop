@@ -38,3 +38,13 @@ export interface SizeByColor{
   colorName: string
   size: number
 }
+export interface Cart{
+  productDetailId:number
+  productName: string
+  brandName: string,
+  imageUrl: string,
+  quantity: number,
+  colorName: string,
+  sizeValue: number
+  price: number
+}

@@ -1,59 +1,39 @@
 <template>
   <Header />
   <v-container style="min-height: 400px; max-height: fit-content">
-    <h2 class="bold-text">{{t('cart.cart')}}</h2>
+    <h2 class="bold-text">{{ t('cart.cart') }}</h2>
 
     <div class="cart-container">
       <div class="product-in-cart">
-        <div class="product-cart">
+        <div class="product-cart" v-for="item in cart" :key="item.productDetailId">
           <img
-            src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
+            :src="item.imageUrl"
             class="img-product-cart"
             alt=""
           />
           <div class="product-info">
-            <p>Nike</p>
-            <p class="name-product-cart">Giày thể thao nike</p>
+            <p>{{item.brandName}}</p>
+            <p class="name-product-cart">{{item.productName}}</p>
+            <p class="attribute-product">{{item.colorName}} - {{item.sizeValue}}</p>
           </div>
 
-          <p class="product-price">1.197.000 đ</p>
+          <p class="product-price">{{formatPrice(item.price)}}</p>
           <v-text-field
             type="number"
             variant="outlined"
             density="compact"
             class="quantity"
             hide-details
+            v-model="item.quantity"
+            @change="updateQuantity(item)"
           ></v-text-field>
           <div>
-            <p class="product-price">1,197.000 đ</p>
-            <p class="text-trash">{{t('cart.delete')}}</p>
+            <p class="product-price">{{formatPrice(item.price*item.quantity)}}</p>
+            <p class="text-trash" @click="deleteProduct(item.productDetailId)">{{ t('cart.delete') }}</p>
           </div>
         </div>
 
-        <div class="product-cart">
-          <img
-            src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-            class="img-product-cart"
-            alt=""
-          />
-          <div class="product-info">
-            <p>Nike</p>
-            <a class="name-product-cart">Giày thể thao nike</a>
-          </div>
 
-          <p class="product-price">1.197.000 đ</p>
-          <v-text-field
-            type="number"
-            variant="outlined"
-            density="compact"
-            class="quantity"
-            hide-details
-          ></v-text-field>
-          <div>
-            <p class="product-price">1,197.000 đ</p>
-            <p class="text-trash">Xóa</p>
-          </div>
-        </div>
       </div>
 
       <div class="total">
@@ -81,16 +61,16 @@
 
         <v-row class="row">
           <v-col>
-            <p class="right-text">{{t('cart.shipping-fee')}}</p>
+            <p class="right-text">{{ t('cart.shipping-fee') }}</p>
           </v-col>
           <v-col>
-            <p class="left-text">{{t('cart.shipping-note')}}</p>
+            <p class="left-text">{{ t('cart.shipping-note') }}</p>
           </v-col>
         </v-row>
         <v-divider />
         <v-row class="row">
           <v-col>
-            <p class="right-text">{{t('cart.into-money')}}</p>
+            <p class="right-text">{{ t('cart.into-money') }}</p>
           </v-col>
           <v-col>
             <p class="total-price">1.195.000 đ</p>
@@ -98,7 +78,7 @@
         </v-row>
 
         <v-btn class="btn" to="/payment"></v-btn>
-        <p class="notice">{{t('cart.note')}}</p>
+        <p class="notice">{{ t('cart.note') }}</p>
       </div>
     </div>
   </v-container>
@@ -107,7 +87,43 @@
 <script setup lang="ts">
 import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
-import { useI18n } from 'vue-i18n';
+import { useI18n } from 'vue-i18n'
+import { cartService } from '@/services/CartService.ts'
+import { onMounted, ref } from 'vue'
+import { type Cart } from '@/interface/interface.ts'
+import debounce from 'lodash/debounce';
+import { it } from 'vitest'
+import { ca } from 'vuetify/locale'
 
-const { t } = useI18n();
+const { t } = useI18n()
+
+const cart = ref<Cart[]>()
+
+const getCart = async () => {
+  const id = localStorage.getItem('userId')
+  const response = await cartService.getCart(id)
+  cart.value = response.data
+}
+const updateQuantity = debounce (async (item) => {
+  if (item.quantity < 1) {
+    item.quantity = 1; // Không cho phép số lượng nhỏ hơn 1
+  }
+  try {
+    await cartService.updateQuantity(item.productDetailId, item.quantity);
+  } catch (error) {
+    console.error('Cập nhật số lượng thất bại', error);
+  }
+}, 500); // Đợi 500ms sau khi người dùng ngừng nhập mới gửi request
+
+const deleteProduct = async (id:number) =>{
+   await cartService.deleteProduct(id)
+  if(cart.value === undefined) return
+  cart.value = cart.value.filter(item => item.productDetailId !== id);
+}
+const formatPrice=(price: number) =>{
+  return Intl.NumberFormat('vi-VN', {maximumFractionDigits:0}).format(price) +" đ"
+}
+onMounted(() => {
+   getCart()
+})
 </script>
