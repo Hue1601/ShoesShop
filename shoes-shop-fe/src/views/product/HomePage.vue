@@ -10,7 +10,7 @@
             <img :src="product.imageUrl" class="img-product" alt=""/>
             <p class="name-product">{{ product.productName }}</p>
             <p class="brand-name">{{ product.brandName }}</p>
-            <p class="price">{{ product.price }} đ</p>
+            <p class="price">{{ formatPrice(product.price) }} </p>
           </v-card>
         </v-slide-group-item>
       </v-slide-group>
@@ -22,10 +22,10 @@
         <v-slide-group-item v-for="(product, index) in latestCollection" :key="index" >
           <v-card class="ma-4"  height="380" width="230" style="box-shadow: none">
               <img :src="product.imageUrl" class="img-product" alt=""/>
-              <v-btn  class="mx-1 " icon width="20" height="20" >color</v-btn>
+<!--              <v-btn  class="mx-1 " icon width="20" height="20" >color</v-btn>-->
               <p class="name-product">{{product.productName}}</p>
               <p class=brand-name>{{product.brandName}}</p>
-              <p class="price">{{product.price}} đ</p>
+              <p class="price">{{formatPrice(product.price)}} </p>
           </v-card>
         </v-slide-group-item>
       </v-slide-group>
@@ -46,14 +46,14 @@ const { t } = useI18n();
 interface Product {
   productName: string;
   brandName: string;
-  price: string;
+  price: number;
   imageUrl: string;
 }
 
 interface LatestCollection {
   productName: string;
   brandName: string;
-  price: string;
+  price: number;
   imageUrl: string;
 }
 const products = ref<Product[]>([]);
@@ -75,6 +75,10 @@ const getProductByLatestCollection = async () =>{
   }catch (e) {
     console.log(e);
   }
+}
+
+const formatPrice = (price:number) =>{
+  return Intl.NumberFormat("vi-VN" ,{maximumFractionDigits:3}).format(price) + " đ"
 }
 
 onMounted(() => {

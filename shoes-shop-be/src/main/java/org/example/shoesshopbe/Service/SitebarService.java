@@ -62,11 +62,11 @@ public class SitebarService {
                     if (values.length == 2) {
                         int minPrice = Integer.parseInt(values[0]);
                         int maxPrice = Integer.parseInt(values[1]);
-                        pricePredicates.add(criteriaBuilder.between(root.get("price"), minPrice, maxPrice));
+                        pricePredicates.add(criteriaBuilder.between(root.join("productDetails").get("price"), minPrice, maxPrice));
                     } else if (values.length == 1) {
 
                         int minPrice = Integer.parseInt(values[0]);
-                        pricePredicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), minPrice));
+                        pricePredicates.add(criteriaBuilder.greaterThanOrEqualTo(root.join("productDetails").get("price"), minPrice));
 
                     }
                 }
@@ -85,7 +85,7 @@ public class SitebarService {
                 product.getId(),
                 product.getProductName(),
                 product.getBrand().getBrandName(),
-                product.getPrice(),
+                product.getProductDetails().get(0).getPrice(),
                 product.getProductImages().get(0).getImageUrl()
         ));
     }

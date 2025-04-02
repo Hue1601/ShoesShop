@@ -1,11 +1,12 @@
 <template>
   <Header />
-  <v-container style="min-height: 400px; max-height: fit-content">
+  <v-container style="min-height: 445px; ">
     <h2 class="bold-text">{{ t('cart.cart') }}</h2>
 
     <div class="cart-container">
       <div class="product-in-cart">
         <div class="product-cart" v-for="item in cart" :key="item.productDetailId">
+          <v-checkbox></v-checkbox>
           <img
             :src="item.imageUrl"
             class="img-product-cart"
@@ -32,8 +33,6 @@
             <p class="text-trash" @click="deleteProduct(item.productDetailId)">{{ t('cart.delete') }}</p>
           </div>
         </div>
-
-
       </div>
 
       <div class="total">
@@ -50,10 +49,10 @@
 
         <v-row class="row">
           <v-col>
-            <p class="right-text">Giảm giá</p>
+            <p class="right-text">{{ t('cart.discount') }}</p>
           </v-col>
           <v-col>
-            <p class="left-text">Áp dụng ở trang thanh toán</p>
+            <p class="left-text">{{ t('cart.discount-note') }}</p>
           </v-col>
         </v-row>
 
@@ -77,7 +76,7 @@
           </v-col>
         </v-row>
 
-        <v-btn class="btn" to="/payment"></v-btn>
+        <v-btn class="btn" to="/payment">{{ t('cart.payment') }}</v-btn>
         <p class="notice">{{ t('cart.note') }}</p>
       </div>
     </div>
@@ -92,8 +91,6 @@ import { cartService } from '@/services/CartService.ts'
 import { onMounted, ref } from 'vue'
 import { type Cart } from '@/interface/interface.ts'
 import debounce from 'lodash/debounce';
-import { it } from 'vitest'
-import { ca } from 'vuetify/locale'
 
 const { t } = useI18n()
 
@@ -101,12 +98,17 @@ const cart = ref<Cart[]>()
 
 const getCart = async () => {
   const id = localStorage.getItem('userId')
+  if(id === null){
+    alert("vui lòng đăng nhập ")
+    return
+  }
   const response = await cartService.getCart(id)
   cart.value = response.data
 }
+
 const updateQuantity = debounce (async (item) => {
   if (item.quantity < 1) {
-    item.quantity = 1; // Không cho phép số lượng nhỏ hơn 1
+    item.quantity = 1;
   }
   try {
     await cartService.updateQuantity(item.productDetailId, item.quantity);

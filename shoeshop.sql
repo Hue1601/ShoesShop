@@ -50,8 +50,7 @@ CREATE TABLE Carts (
     UserID INT FOREIGN KEY REFERENCES Users(ID),
     CreatedAt DATETIME DEFAULT GETDATE()
 );
-select * from Users 
-insert into Carts(UserID) values (2)
+
 CREATE TABLE CartItems (
     Id INT IDENTITY PRIMARY KEY,
     CartId INT FOREIGN KEY REFERENCES Carts(Id),

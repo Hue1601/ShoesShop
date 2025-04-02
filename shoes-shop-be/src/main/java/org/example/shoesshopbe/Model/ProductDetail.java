@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "ProductDetails")
 @Data
@@ -27,5 +29,6 @@ public class ProductDetail {
     private Sizes size;
 
     private Integer stock;
+    private BigDecimal price;
 }
 

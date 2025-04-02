@@ -17,7 +17,7 @@ public interface CartRepo extends JpaRepository<Carts,Integer> {
 
     @Query("""
        SELECT new org.example.shoesshopbe.Response.CartResponse(
-       pd.id,p.productName,b.brandName,p.price,pimg.imageUrl,ci.quantity,col.colorName,s.sizeValue
+       pd.id,p.productName,b.brandName,pd.price,pimg.imageUrl,ci.quantity,col.colorName,s.sizeValue
        )
        FROM CartItems ci
        LEFT JOIN ProductDetail pd ON pd.id = ci.product.id  

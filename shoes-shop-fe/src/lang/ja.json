@@ -23,7 +23,9 @@
     "btn-payment": "Thanh toán",
     "note": "*Phí ship và coupon áp dụng tại trang thanh toán",
     "shipping-fee": "Phí vận chuyển",
-    "shipping-note": "Phí ship được tính ở trang thanh toán"
+    "shipping-note": "Phí ship được tính ở trang thanh toán",
+    "discount": "Giảm giá",
+    "discount-note": "Giảm giá được áp dụng ở trang thanh toán"
   },
   "list-product": {
     "btn-arrange": "Sắp xếp",

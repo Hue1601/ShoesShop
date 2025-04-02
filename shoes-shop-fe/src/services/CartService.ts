@@ -10,7 +10,7 @@ class CartService {
     });
     return cart;
   }
-  async getCart(id:number){
+  async getCart(id:string){
     const list = await axios.get(`http://localhost:8080/cart/${id}`);
     return list;
   }
