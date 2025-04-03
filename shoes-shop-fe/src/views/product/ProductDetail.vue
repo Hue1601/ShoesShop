@@ -59,8 +59,8 @@
           ></v-text-field>
         </div>
         <div class="d-flex brand-name" v-if="selectedSize">
-          <p>Số lượng còn lại:</p>
-          <p> {{selectedSize.stock }}</p>
+          <p>Số lượng còn lại: </p>
+          <p > {{stock }}</p>
         </div>
         <p class="bold-text">{{ t('product-detail.color') }}</p>
         <v-btn
@@ -77,11 +77,11 @@
           <v-btn
             v-for="(size, index) in filteredSizes"
             :key="index"
-            :class="selectedSize === size ? 'is-click-btn' : 'btn-size'"
-            @click="changeSize(size)"
+            :class="selectedSize === size.size ? 'is-click-btn' : 'btn-size'"
+            @click="changeSize(size.size,size.stock)"
             :disabled="size.stock === 0"
           >
-            {{ size.size }} --{{size.stock}}
+            {{ size.size }}
           </v-btn>
 
         </div>
@@ -213,12 +213,10 @@ const showImgProduct = ref(false)
 const imgLightBox = ref('')
 const product = computed(() => productDetail.value[0] || {})
 
-// const selectedColor = ref<number | null>(null)
 const selectedColor = ref<string | null>(null);
-
-const selectedSize = ref<string | null>(null);
+const selectedSize = ref<number | null>(null);
 const sizeByColor = ref<SizeByColor[]>([])
-
+const stock = ref<number | null>(null)
 const relatedProduct = ref<Product[]>([])
 const quantity = ref(1);
 // Lấy danh sách các màu, size không trùng lặp
@@ -257,13 +255,16 @@ const formatPrice = (price: number) => {
 const changeColor = async ( color: string) => {
   selectedColor.value = color
   colorParam.value.color = color
+  selectedSize.value =null
   updateParam()
 
   const res = await productService.getSizeByColor(Number(route.params.id), color)
   sizeByColor.value = res.data
 }
-const changeSize = (size: string) => {
+
+const changeSize = (size: number,quantity:number) => {
   selectedSize.value = size
+  stock.value = quantity
 }
 
 const updateParam = () => {
