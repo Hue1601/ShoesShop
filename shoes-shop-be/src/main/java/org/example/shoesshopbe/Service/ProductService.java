@@ -81,7 +81,8 @@ public class ProductService {
         return productDetails.stream().map(product -> new SizeByColorResponse(
                 product.getStock(),
                 product.getColor().getColorName(),
-                product.getSize().getSizeValue()
+                product.getSize().getSizeValue(),
+                product.getPrice()
         )).collect(Collectors.toList());
 
     }

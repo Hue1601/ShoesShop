@@ -91,11 +91,12 @@ public interface ProductRepo extends JpaRepository<Products, Integer>, JpaSpecif
 
     @Query("""
              SELECT new org.example.shoesshopbe.Response.ProductDetailResponse(
-            pd.id, p.productName, b.brandName, pd.price,img.imageUrl,c.colorName,
+            pd.id, p.productName, b.brandName, pp.price,img.imageUrl,c.colorName,
             s.sizeValue,pd.stock,d.discountPercentage,p.description,pc.category.id,img.isThumbnail) FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id 
                 LEFT JOIN ProductDetail pd ON p.id = pd.product.id
+                 LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
                 LEFT JOIN Colors c ON pd.color.id = c.id
                 LEFT JOIN Sizes s ON pd.size.id = s.id
                 LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id

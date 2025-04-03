@@ -36,12 +36,15 @@
         </h2>
         <p class="brand-name">{{ product.brandName }}</p>
         <div class="product-price-detail">
+
           <p class="discount-price" v-if="product.discountPercentage">
-            {{ formatPrice(product.discountPrice) }}
+            {{ formatPrice(discountPrice) }}
           </p>
+
           <p :class="{ 'origin-price': product.discountPercentage }">
-            {{ formatPrice(product.price) }}
+            {{ formatPrice(selectedSize ? priceProductDetail :product.price) }}
           </p>
+
           <p class="product-discount-badge" v-if="product.discountPercentage">
             {{ product.discountPercentage }} %
           </p>
@@ -78,7 +81,7 @@
             v-for="(size, index) in filteredSizes"
             :key="index"
             :class="selectedSize === size.size ? 'is-click-btn' : 'btn-size'"
-            @click="changeSize(size.size,size.stock)"
+            @click="changeSize(size.size,size.stock,size.price)"
             :disabled="size.stock === 0"
           >
             {{ size.size }}
@@ -219,6 +222,7 @@ const sizeByColor = ref<SizeByColor[]>([])
 const stock = ref<number | null>(null)
 const relatedProduct = ref<Product[]>([])
 const quantity = ref(1);
+const priceProductDetail = ref<number >(0)
 // Lấy danh sách các màu, size không trùng lặp
 const sizes = computed(() => [...new Set(productDetail.value.map((p) => p.sizeValue))])
 
@@ -262,9 +266,10 @@ const changeColor = async ( color: string) => {
   sizeByColor.value = res.data
 }
 
-const changeSize = (size: number,quantity:number) => {
+const changeSize = (size: number,quantity:number,price:number) => {
   selectedSize.value = size
   stock.value = quantity
+  priceProductDetail.value = price
 }
 
 const updateParam = () => {
@@ -285,6 +290,7 @@ const filteredSizes = computed(() => {
     return sizes.value.map((s) => ({
       size: s,
       stock: 1,
+      price:0
     }))
   }
   return sizeByColor.value
@@ -325,6 +331,10 @@ const selectedProductId = computed(() => {
   return selectedProduct ? selectedProduct.id : null;
 });
 
+const discountPrice = computed(() => {
+  const price = selectedSize.value ? priceProductDetail.value : product.value.price;
+  return price * (1 - (product.value.discountPercentage / 100));
+});
 onMounted(() => {
   getProductDetail().then(() => {
     const queryColor = Array.isArray(route.query.color) ? route.query.color[0] : route.query.color

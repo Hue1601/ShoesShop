@@ -43,7 +43,8 @@ export interface ProductDetail {
 export interface SizeByColor{
   stock: number
   colorName: string
-  size: number
+  size: number,
+  price: number
 }
 export interface Cart{
   productDetailId:number

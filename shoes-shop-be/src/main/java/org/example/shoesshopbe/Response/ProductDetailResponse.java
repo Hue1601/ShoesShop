@@ -22,7 +22,7 @@ public class ProductDetailResponse {
     private String description;
     private Boolean isThumbnail;
     private Integer categoryId;
-    private BigDecimal discountPrice; 
+//    private BigDecimal discountPrice;
 
     public ProductDetailResponse(
             Integer id,
@@ -50,12 +50,12 @@ public class ProductDetailResponse {
         this.description = description;
         this.isThumbnail = isThumbnail;
          this.categoryId = categoryId;
-        if (discountPercentage != null && price != null) {
-            BigDecimal discount = BigDecimal.valueOf(100 - discountPercentage)
-                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
-            this.discountPrice = price.multiply(discount).setScale(0, RoundingMode.HALF_UP);
-        } else {
-            this.discountPrice = null;
-        }
+//        if (discountPercentage != null && price != null) {
+//            BigDecimal discount = BigDecimal.valueOf(100 - discountPercentage)
+//                    .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+//            this.discountPrice = price.multiply(discount).setScale(0, RoundingMode.HALF_UP);
+//        } else {
+//            this.discountPrice = null;
+//        }
     }
 }
