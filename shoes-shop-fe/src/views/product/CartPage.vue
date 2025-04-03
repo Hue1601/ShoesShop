@@ -76,7 +76,7 @@
           </v-col>
         </v-row>
 
-        <v-btn class="btn" to="/payment">{{ t('cart.payment') }}</v-btn>
+        <v-btn class="btn" to="/payment">{{ t('cart.btn-payment') }}</v-btn>
         <p class="notice">{{ t('cart.note') }}</p>
       </div>
     </div>

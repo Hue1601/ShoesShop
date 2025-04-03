@@ -1,6 +1,9 @@
 package org.example.shoesshopbe.Service;
 
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
+import org.example.shoesshopbe.Model.ProductDetail;
 import org.example.shoesshopbe.Model.Products;
 import org.example.shoesshopbe.Repo.ProductRepo;
 import org.example.shoesshopbe.Response.ProductResponse;
@@ -10,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,26 +61,38 @@ public class SitebarService {
             }
             if (priceRanges != null && !priceRanges.isEmpty()) {
                 List<Predicate> pricePredicates = new ArrayList<>();
+
                 for (String range : priceRanges) {
                     String[] values = range.split("-");
+
+                    // Tạo subquery để lấy giá thấp nhất trong ProductDetail cho mỗi sản phẩm
+                    Subquery<Double> subquery = query.subquery(Double.class);
+                    Root<ProductDetail> subRoot = subquery.from(ProductDetail.class);
+                    subquery.select(criteriaBuilder.min(subRoot.get("price"))) // Lấy giá thấp nhất
+                            .where(criteriaBuilder.equal(subRoot.get("product"), root)); // Liên kết với Products
+
                     if (values.length == 2) {
                         int minPrice = Integer.parseInt(values[0]);
                         int maxPrice = Integer.parseInt(values[1]);
-                        pricePredicates.add(criteriaBuilder.between(root.join("productDetails").get("price"), minPrice, maxPrice));
+                        pricePredicates.add(criteriaBuilder.and(
+                                criteriaBuilder.greaterThanOrEqualTo(subquery.getSelection(), (double) minPrice),
+                                criteriaBuilder.lessThanOrEqualTo(subquery.getSelection(), (double) maxPrice)
+                        ));
                     } else if (values.length == 1) {
-
                         int minPrice = Integer.parseInt(values[0]);
-                        pricePredicates.add(criteriaBuilder.greaterThanOrEqualTo(root.join("productDetails").get("price"), minPrice));
-
+                        pricePredicates.add(criteriaBuilder.greaterThanOrEqualTo(subquery.getSelection(), (double) minPrice));
                     }
                 }
+
                 if (!pricePredicates.isEmpty()) {
                     predicates.add(criteriaBuilder.or(pricePredicates.toArray(new Predicate[0])));
                 }
             }
-            if (keyword != null) {
-                predicates.add(criteriaBuilder.like(root.get("productName"), "%" + keyword + "%"));
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("productName")), "%" + keyword.toLowerCase().trim() + "%"));
             }
+
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
         Page<Products> productList = productRepo.findAll(spec,pageable );
@@ -85,8 +101,10 @@ public class SitebarService {
                 product.getId(),
                 product.getProductName(),
                 product.getBrand().getBrandName(),
-                product.getProductDetails().get(0).getPrice(),
-                product.getProductImages().get(0).getImageUrl()
+                product.getProductDetails().isEmpty() ? BigDecimal.ZERO : product.getProductDetails().get(0).getPrice(),
+                product.getProductImages().isEmpty() ? null : product.getProductImages().get(0).getImageUrl()
         ));
+
+
     }
 }

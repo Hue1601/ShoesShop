@@ -50,16 +50,17 @@
         <div class="display-quantity">
           <p class="bold-text">{{ t('product-detail.quantity') }}</p>
           <v-text-field
+            v-model="quantity"
             type="number"
             variant="outlined"
             density="compact"
             class="quantity"
-            model-value="1"
+            min="1"
           ></v-text-field>
         </div>
-        <div class="d-flex brand-name">
+        <div class="d-flex brand-name" v-if="selectedSize">
           <p>Số lượng còn lại:</p>
-          <p v-for="(size, index) in filteredSizes" :key="index"> {{size.stock  }}</p>
+          <p> {{selectedSize.stock }}</p>
         </div>
         <p class="bold-text">{{ t('product-detail.color') }}</p>
         <v-btn
@@ -80,8 +81,9 @@
             @click="changeSize(size)"
             :disabled="size.stock === 0"
           >
-            {{ size.size }}
+            {{ size.size }} --{{size.stock}}
           </v-btn>
+
         </div>
 
         <div class="size">
@@ -163,7 +165,7 @@
     <v-sheet max-width="100%">
       <v-slide-group class="pa-4" selected-class="bg-success" show-arrows>
         <v-slide-group-item v-for="product in relatedProduct" :key="product.id">
-          <v-card class="ma-4 box-shadow" height="380" width="230">
+          <v-card class="ma-4 box-shadow" height="380" width="230"  :to="`/product-detail/${product.id}`">
             <div class=" ">
               <img :src="product.imageUrl" class="img-product" alt="" />
               <v-btn class="mx-1" icon width="20" height="20"></v-btn>
@@ -218,7 +220,7 @@ const selectedSize = ref<string | null>(null);
 const sizeByColor = ref<SizeByColor[]>([])
 
 const relatedProduct = ref<Product[]>([])
-
+const quantity = ref(1);
 // Lấy danh sách các màu, size không trùng lặp
 const sizes = computed(() => [...new Set(productDetail.value.map((p) => p.sizeValue))])
 
@@ -300,11 +302,9 @@ const addToCart = async () => {
     console.error("Không tìm thấy sản phẩm phù hợp!");
     return;
   }
-  const quantity = 1;
-  await cartService.addToCart( productId, quantity,userId);
+
+  await cartService.addToCart( productId, quantity.value,userId);
 };
-
-
 
 const selectedProductId = computed(() => {
   if (!selectedColor.value || !selectedSize.value) {
@@ -334,5 +334,6 @@ onMounted(() => {
     }
   })
   getRelatedProduct()
+
 })
 </script>

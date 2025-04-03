@@ -3,6 +3,13 @@ export interface Brand {
   brandName: string;
   logo: string;
 }
+export interface LatestCollection {
+  id: number;
+  productName: string;
+  brandName: string;
+  price: number;
+  imageUrl: string;
+}
 export interface Product {
   id: number
   productName: string

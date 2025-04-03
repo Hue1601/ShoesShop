@@ -135,7 +135,7 @@ const priceOptions = ref([
   { label: '1.000.000 đ - 2.000.000 đ', value: '1000000-2000000' },
   { label: '2.000.000 đ - 3.000.000 đ', value: '2000000-3000000' },
   { label: '3.000.000 đ - 4.000.000 đ', value: '3000000-4000000' },
-  { label: 'Trên 5.000.000 đ', value: '5000000' },
+  { label: 'Trên 4.000.000 đ', value: '4000000' },
 ])
 
 const listBrand = ref<Brand[]>([])

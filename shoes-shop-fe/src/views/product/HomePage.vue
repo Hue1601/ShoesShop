@@ -6,7 +6,7 @@
     <v-sheet max-width="100%">
       <v-slide-group  class="pa-4" selected-class="bg-success" show-arrows>
         <v-slide-group-item v-for="(product, index) in products" :key="index">
-          <v-card class="ma-4" height="380" width="230" style="box-shadow: none">
+          <v-card class="ma-4" height="380" width="230" style="box-shadow: none"  :to="`/product-detail/${product.id}`">
             <img :src="product.imageUrl" class="img-product" alt=""/>
             <p class="name-product">{{ product.productName }}</p>
             <p class="brand-name">{{ product.brandName }}</p>
@@ -20,7 +20,7 @@
     <v-sheet max-width="100%">
       <v-slide-group  class="pa-4" selected-class="bg-success" show-arrows >
         <v-slide-group-item v-for="(product, index) in latestCollection" :key="index" >
-          <v-card class="ma-4"  height="380" width="230" style="box-shadow: none">
+          <v-card class="ma-4"  height="380" width="230" style="box-shadow: none"  :to="`/product-detail/${product.id}`">
               <img :src="product.imageUrl" class="img-product" alt=""/>
 <!--              <v-btn  class="mx-1 " icon width="20" height="20" >color</v-btn>-->
               <p class="name-product">{{product.productName}}</p>
@@ -40,22 +40,11 @@ import Footer from '../../components/common/FooterPage.vue'
 import { useI18n } from 'vue-i18n';
 import { productService } from '@/services/ProductService.ts'
 import { ref, onMounted } from 'vue'
+import {type Product,type LatestCollection} from '@/interface/interface.ts'
 
 const { t } = useI18n();
 
-interface Product {
-  productName: string;
-  brandName: string;
-  price: number;
-  imageUrl: string;
-}
 
-interface LatestCollection {
-  productName: string;
-  brandName: string;
-  price: number;
-  imageUrl: string;
-}
 const products = ref<Product[]>([]);
 const latestCollection = ref<LatestCollection[]>([])
 
