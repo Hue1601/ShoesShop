@@ -2,11 +2,22 @@
   <Header />
   <v-container style="min-height: 445px; ">
     <h2 class="bold-text">{{ t('cart.cart') }}</h2>
+    <div class="product-cart" style="height: 45px">
+      <v-checkbox
+        v-model="selectAll"
+        label="Chọn tất cả"
+      ></v-checkbox>
+
+    </div>
 
     <div class="cart-container">
       <div class="product-in-cart">
         <div class="product-cart" v-for="item in cart" :key="item.productDetailId">
-          <v-checkbox></v-checkbox>
+          <v-checkbox
+            :model-value="isSelected(item.productDetailId)"
+            @change="toggleSelectItem(item.productDetailId)"
+          ></v-checkbox>
+
           <img
             :src="item.imageUrl"
             class="img-product-cart"
@@ -18,7 +29,11 @@
             <p class="attribute-product">{{item.colorName}} - {{item.sizeValue}}</p>
           </div>
 
-          <p class="product-price">{{formatPrice(item.price)}}</p>
+          <div>
+            <p class="product-price" :class="{'origin-price' : item.discountPercentage}">{{formatPrice(item.price)}}</p>
+            <p v-if="item.discountPercentage" class="discount-price" style="font-size: 13px">{{formatPrice(item.price*(1-item.discountPercentage/100))}}</p>
+          </div>
+
           <v-text-field
             type="number"
             variant="outlined"
@@ -29,7 +44,7 @@
             @change="updateQuantity(item)"
           ></v-text-field>
           <div>
-            <p class="product-price">{{formatPrice(item.price*item.quantity)}}</p>
+            <p class="product-price">{{ formatPrice(getFinalPrice(item)) }}</p>
             <p class="text-trash" @click="deleteProduct(item.productDetailId)">{{ t('cart.delete') }}</p>
           </div>
         </div>
@@ -38,10 +53,10 @@
       <div class="total">
         <v-row class="row">
           <v-col>
-            <p class="right-text">(1) sản phẩm</p>
+            <p class="right-text">({{ totalQuantity }}) sản phẩm</p>
           </v-col>
           <v-col>
-            <p class="total-price">1.195.00 đ</p>
+            <p class="total-price">{{ formatPrice(totalPrice) }}</p>
           </v-col>
         </v-row>
 
@@ -88,13 +103,14 @@ import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
 import { useI18n } from 'vue-i18n'
 import { cartService } from '@/services/CartService.ts'
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { type Cart } from '@/interface/interface.ts'
 import debounce from 'lodash/debounce';
 
 const { t } = useI18n()
-
-const cart = ref<Cart[]>()
+const cart = ref<Cart[]>([])
+const selectAll = ref(false)
+const selectedIds = ref<number[]>([])
 
 const getCart = async () => {
   const id = localStorage.getItem('userId')
@@ -125,7 +141,46 @@ const deleteProduct = async (id:number) =>{
 const formatPrice=(price: number) =>{
   return Intl.NumberFormat('vi-VN', {maximumFractionDigits:0}).format(price) +" đ"
 }
+const getFinalPrice = (item: Cart) => {
+  const discount = item.discountPercentage || 0;
+  return item.price * (1 - discount / 100) * item.quantity;
+};
+
+function toggleSelectItem(productDetailId:number) {
+  const index = selectedIds.value.indexOf(productDetailId)
+  if (index === -1) {
+    selectedIds.value.push(productDetailId)
+  } else {
+    selectedIds.value.splice(index, 1)
+  }
+}
+
+const isSelected = (id:number) => selectedIds.value.includes(id)
+
+watch(selectAll, (val) => {
+  if (val) {
+    selectedIds.value = cart.value.map(item => item.productDetailId)
+  } else {
+    selectedIds.value = []
+  }
+})
+
+const selectedItems = computed(() =>
+  cart.value.filter(item => selectedIds.value.includes(item.productDetailId))
+)
+
+const totalQuantity = computed(() => selectedItems.value.length)
+
+const totalPrice = computed(() =>
+  selectedItems.value.reduce((acc, item) => {
+    const finalPrice = item.discountPercentage
+      ? item.price * (1 - item.discountPercentage / 100)
+      : item.price
+    return acc + finalPrice * item.quantity
+  }, 0)
+)
 onMounted(() => {
    getCart()
+
 })
 </script>

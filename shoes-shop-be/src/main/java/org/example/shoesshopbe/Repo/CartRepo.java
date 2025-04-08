@@ -1,6 +1,5 @@
 package org.example.shoesshopbe.Repo;
 
-import org.example.shoesshopbe.Model.CartItems;
 import org.example.shoesshopbe.Model.Carts;
 import org.example.shoesshopbe.Response.CartResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,7 +16,7 @@ public interface CartRepo extends JpaRepository<Carts,Integer> {
 
     @Query("""
        SELECT new org.example.shoesshopbe.Response.CartResponse(
-       pd.id,p.productName,b.brandName,pd.price,pimg.imageUrl,ci.quantity,col.colorName,s.sizeValue
+       pd.id,p.productName,b.brandName,pd.price,pimg.imageUrl,ci.quantity,col.colorName,s.sizeValue,d.discountPercentage
        )
        FROM CartItems ci
        LEFT JOIN ProductDetail pd ON pd.id = ci.product.id  
@@ -28,6 +27,8 @@ public interface CartRepo extends JpaRepository<Carts,Integer> {
        LEFT JOIN Carts c ON c.id = ci.cart.id
        LEFT JOIN Users u ON u.id = c.user.id
        LEFT JOIN ProductImages pimg ON p.id = pimg.product.id AND pimg.isThumbnail= true 
+       LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+       LEFT JOIN Discounts d ON pdsc.discount.id = d.id
        WHERE u.id = :userId
 """)
     List<CartResponse> getCart(@Param( "userId") Integer userId);

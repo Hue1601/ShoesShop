@@ -319,7 +319,7 @@ const selectedProductId = computed(() => {
     return null;
   }
 
-  const selectedSizeValue = Number(selectedSize.value.size);
+  const selectedSizeValue = Number(selectedSize.value);
 
   const selectedProduct = productDetail.value.find((p) => {
     return (

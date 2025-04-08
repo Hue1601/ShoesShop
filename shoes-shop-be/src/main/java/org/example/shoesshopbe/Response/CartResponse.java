@@ -18,4 +18,5 @@ public class CartResponse {
     private Integer quantity;
     private String colorName ;
     private Float sizeValue;
+    private Float discountPercentage;
 }

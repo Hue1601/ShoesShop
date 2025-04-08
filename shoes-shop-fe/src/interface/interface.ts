@@ -54,5 +54,6 @@ export interface Cart{
   quantity: number,
   colorName: string,
   sizeValue: number
-  price: number
+  price: number,
+  discountPercentage: number
 }
