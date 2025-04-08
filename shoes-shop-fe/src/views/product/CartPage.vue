@@ -5,7 +5,6 @@
     <div class="product-cart" style="height: 45px">
       <v-checkbox
         v-model="selectAll"
-        label="Chọn tất cả"
       ></v-checkbox>
 
     </div>
