@@ -16,10 +16,12 @@ public class ProductDiscounts {
     private ProductDiscountsKey id;
 
     @ManyToOne
+    @MapsId("product")
     @JoinColumn(name = "ProductID")
     private Products product;
 
     @ManyToOne
+    @MapsId("discount")
     @JoinColumn(name = "DiscountID")
     private Discounts discount;
 

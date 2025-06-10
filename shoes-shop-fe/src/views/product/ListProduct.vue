@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <v-container max-width="94%">
+  <v-container max-width="94%" style="min-height: 550px">
     <div style="display: flex">
       <Sitebar />
       <div class="list-product">
@@ -32,8 +32,8 @@
         <v-list class="product-list">
           <v-card
             class="ma-4"
-            height="380"
-            width="249"
+            height="400"
+            width="275"
             style="box-shadow: none"
             v-for="(product, index) in products"
             :key="index"
@@ -41,12 +41,12 @@
           >
             <div class="">
               <img :src="product.imageUrl" class="img-product" alt="" />
-              <div class="color-options">
-                <v-btn>
-                  v-for="(color, i) in product.color" :key="i" class="mx-1 color-btn" icon
-                  width="20" height="20" :style="{ backgroundColor: color }">
-                </v-btn>
-              </div>
+<!--              <div class="color-options">-->
+<!--                <v-btn-->
+<!--                  v-for="(color, i) in product.color" :key="i" class="mx-1 color-btn" icon-->
+<!--                  width="20" height="20" :style="{ backgroundColor: color }">-->
+<!--                </v-btn>-->
+<!--              </div>-->
               <p class="name-product">{{ product.productName }}</p>
               <p class="brand-name">{{ product.brandName }}</p>
 
