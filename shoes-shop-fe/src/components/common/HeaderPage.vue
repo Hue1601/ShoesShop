@@ -1,6 +1,6 @@
 <template >
   <v-toolbar class="header" density="comfortable">
-    <span class="shop-name">{{ t('header.shop-name') }}</span>
+    <span class="shop-name" @click="() => router.push('/home')" >{{ t('header.shop-name') }}</span>
     <router-link to="/home" class="header-item text"> {{ t('header.home') }}</router-link>
     <router-link to="/list-product" class="header-item text">
       {{ t('header.product') }}

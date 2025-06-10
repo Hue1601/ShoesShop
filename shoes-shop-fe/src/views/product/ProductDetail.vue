@@ -253,7 +253,7 @@ const getProductDetail = async () => {
 }
 
 const formatPrice = (price: number) => {
-  return Intl.NumberFormat('vi-Vn', { maximumFractionDigits: 0 }).format(price) + ' đ'
+  return Math.round(price).toLocaleString('vi-VN') + ' đ'
 }
 
 const changeColor = async ( color: string) => {

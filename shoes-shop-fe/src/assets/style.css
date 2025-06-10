@@ -226,6 +226,11 @@
     color: black;
     font-size: 14px;
 }
+.display-discount{
+    margin-left: 10px;
+    margin-right: 0;
+    align-content: center;
+}
 /*product detail*/
 .img-product-detail{
     width: 680px;

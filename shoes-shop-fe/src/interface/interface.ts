@@ -16,6 +16,7 @@ export interface Product {
   brandName: string
   price: number
   imageUrl: string
+  discountPercentage: number
 }
 export interface Collection {
   id: number

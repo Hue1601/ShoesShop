@@ -18,21 +18,24 @@ public interface ProductRepo extends JpaRepository<Products, Integer>, JpaSpecif
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                     p.id,  p.productName, b.brandName,pp.price, img.imageUrl)  FROM Products p
+                     p.id,  p.productName, b.brandName,pp.price, img.imageUrl,d.discountPercentage)  FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
-                ORDER BY p.createdAt DESC LIMIT 5
+                LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+                LEFT JOIN Discounts d ON pdsc.discount.id = d.id ORDER BY p.createdAt DESC LIMIT 5
             """)
     List<ProductResponse> findTop5Product();
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                 p.id,  p.productName, p.brand.brandName,pp.price, img.imageUrl) FROM Products p
+                 p.id,  p.productName, p.brand.brandName,pp.price, img.imageUrl,d.discountPercentage) FROM Products p
                 LEFT JOIN ProductCollections pc ON p.id = pc.product.id
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 LEFT JOIN Collections c ON pc.collection.id = c.id
                 LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
+                LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+                LEFT JOIN Discounts d ON pdsc.discount.id = d.id
                 WHERE c.id = (SELECT id FROM Collections ORDER BY createdAt DESC LIMIT 1)
                 ORDER BY p.createdAt DESC LIMIT 5
             """)
@@ -41,20 +44,24 @@ public interface ProductRepo extends JpaRepository<Products, Integer>, JpaSpecif
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                    p.id, p.productName, b.brandName, pp.price, img.imageUrl)  FROM Products p
+                    p.id, p.productName, b.brandName, pp.price, img.imageUrl,d.discountPercentage)  FROM Products p
                 LEFT JOIN p.brand b
+                LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+                LEFT JOIN Discounts d ON pdsc.discount.id = d.id
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
-                LEFT JOIN (SELECT pd.product.id AS productId, MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp 
-                    ON p.id = pp.productId
+                LEFT JOIN (SELECT pd.product.id AS productId, MIN(pd.price) AS price
+                FROM ProductDetail pd GROUP BY pd.product.id) pp  ON p.id = pp.productId
                 ORDER BY p.createdAt DESC
             """)
     Page<ProductResponse> findAllProducts(Pageable pageable);
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                    p.id , p.productName, b.brandName, pp.price, img.imageUrl)  FROM Products p
+                    p.id , p.productName, b.brandName, pp.price, img.imageUrl,d.discountPercentage)  FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
+                LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+                LEFT JOIN Discounts d ON pdsc.discount.id = d.id
                 LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
                 ORDER BY p.createdAt Asc
             """)
@@ -62,8 +69,10 @@ public interface ProductRepo extends JpaRepository<Products, Integer>, JpaSpecif
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                    p.id ,p.productName, b.brandName,pp.price, img.imageUrl)  FROM Products p
+                    p.id ,p.productName, b.brandName,pp.price, img.imageUrl,d.discountPercentage)  FROM Products p
                 LEFT JOIN p.brand b
+                LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+                LEFT JOIN Discounts d ON pdsc.discount.id = d.id
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
                 ORDER BY pp.price Asc
@@ -72,8 +81,10 @@ public interface ProductRepo extends JpaRepository<Products, Integer>, JpaSpecif
 
     @Query("""
             SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                 p.id,  p.productName, b.brandName,pp.price, img.imageUrl)  FROM Products p
+                 p.id,  p.productName, b.brandName,pp.price, img.imageUrl,d.discountPercentage)  FROM Products p
             LEFT JOIN p.brand b
+            LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+            LEFT JOIN Discounts d ON pdsc.discount.id = d.id
             LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
              LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
             ORDER BY pp.price desc""")
@@ -81,8 +92,10 @@ public interface ProductRepo extends JpaRepository<Products, Integer>, JpaSpecif
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                    p.id, p.productName, b.brandName, pp.price,img.imageUrl)  FROM Products p
+                    p.id, p.productName, b.brandName, pp.price,img.imageUrl,d.discountPercentage)  FROM Products p
                 LEFT JOIN p.brand b
+                LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+                LEFT JOIN Discounts d ON pdsc.discount.id = d.id
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
                 ORDER BY p.createdAt DESC
@@ -96,23 +109,25 @@ public interface ProductRepo extends JpaRepository<Products, Integer>, JpaSpecif
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id 
                 LEFT JOIN ProductDetail pd ON p.id = pd.product.id
-                 LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
+                LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
                 LEFT JOIN Colors c ON pd.color.id = c.id
                 LEFT JOIN Sizes s ON pd.size.id = s.id
                 LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
                 LEFT JOIN Discounts d ON pdsc.discount.id = d.id
-               LEFT JOIN ProductCategory pc ON p.id = pc.product.id
+                LEFT JOIN ProductCategory pc ON p.id = pc.product.id                        
                 WHERE p.id = :id
             """)
     List<ProductDetailResponse> getProductDetail(@Param("id") Integer id);
 
     @Query("""
                 SELECT new org.example.shoesshopbe.Response.ProductResponse(
-                     p.id,  p.productName, b.brandName, pp.price, img.imageUrl)
+                     p.id,  p.productName, b.brandName, pp.price, img.imageUrl,d.discountPercentage)
                 FROM Products p
                 LEFT JOIN p.brand b
                 LEFT JOIN ProductImages img ON p.id = img.product.id AND img.isThumbnail = true
                 LEFT JOIN ProductCategory pc ON p.id = pc.product.id
+                LEFT JOIN ProductDiscounts pdsc ON pdsc.product.id = p.id
+                LEFT JOIN Discounts d ON pdsc.discount.id = d.id
                 LEFT JOIN (SELECT pd.product.id AS productId,MIN(pd.price) AS price FROM ProductDetail pd GROUP BY pd.product.id) pp ON p.id = pp.productId
                 WHERE pc.category.id = :categoryId AND p.id <> :productId
                 ORDER BY p.createdAt DESC

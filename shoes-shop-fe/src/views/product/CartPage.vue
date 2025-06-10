@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <v-container style="min-height: 445px; ">
+  <v-container style="min-height: 550px; ">
     <h2 class="bold-text">{{ t('cart.cart') }}</h2>
     <div class="product-cart" style="height: 45px">
       <v-checkbox
@@ -138,7 +138,7 @@ const deleteProduct = async (id:number) =>{
   cart.value = cart.value.filter(item => item.productDetailId !== id);
 }
 const formatPrice=(price: number) =>{
-  return Intl.NumberFormat('vi-VN', {maximumFractionDigits:0}).format(price) +" đ"
+ return Math.round(price).toLocaleString('vi-VN' + ' đ')
 }
 const getFinalPrice = (item: Cart) => {
   const discount = item.discountPercentage || 0;
