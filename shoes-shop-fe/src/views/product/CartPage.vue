@@ -138,7 +138,8 @@ const deleteProduct = async (id:number) =>{
   cart.value = cart.value.filter(item => item.productDetailId !== id);
 }
 const formatPrice=(price: number) =>{
- return Math.round(price).toLocaleString('vi-VN' + ' đ')
+ // return Math.round(price).toLocaleString('vi-VN' + ' đ')
+  return Math.round(price).toLocaleString('vi-VN') + ' ₫';
 }
 const getFinalPrice = (item: Cart) => {
   const discount = item.discountPercentage || 0;

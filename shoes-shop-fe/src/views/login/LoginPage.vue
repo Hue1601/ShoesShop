@@ -56,7 +56,6 @@ const login = async () => {
   try {
     const response = await loginService.login(username.value, password.value)
     localStorage.setItem("userId",response.data.id)
-    console.log(localStorage.getItem("userId"))
 
     if (response.status === 200) {
        router.push('/home')
