@@ -82,144 +82,22 @@
       <v-col cols="5" class="show-info-order">
 
         <v-sheet class="summary-order-product">
-           <div class="product-info-payment">
+           <div class="product-info-payment" v-for="pro in selectedItems " :key="pro.productDetailId">
              <img
-               src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
+               :src="pro.imageUrl"
                class="img-product-payment"
                alt=""
              />
              <div  class="order-summary">
-               <p class="bold-text">Giày thể thao nam</p>
-               <p class="brand-name">Đỏ/27</p>
+               <p class="bold-text">{{pro.productName}}</p>
+               <p class="brand-name">{{pro.colorName}}/{{pro.sizeValue}}</p>
              </div>
              <div class="product-quantity">
-               <p>2.200.00 đ</p>
-               <p class="brand-name">x1</p>
+               <p>{{formatPrice(pro.finalPrice)}}</p>
+               <p class="brand-name">x{{pro.quantity}}</p>
              </div>
            </div>
-          <div class="product-info-payment">
-            <img
-              src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-              class="img-product-payment"
-              alt=""
-            />
-            <div  class="order-summary">
-              <p class="bold-text">Giày thể thao nam</p>
-              <p class="brand-name">Đỏ/27</p>
-            </div>
-            <div class="product-quantity">
-              <p>2.200.00 đ</p>
-              <p class="brand-name">x1</p>
-            </div>
-          </div>
-          <div class="product-info-payment">
-            <img
-              src="../../components/icons/listicon/HQ4199-1.webp"
-              class="img-product-payment"
-              alt=""
-            />
-            <div  class="order-summary">
-              <p class="bold-text">Giày thể thao nam</p>
-              <p class="brand-name">Đỏ/27</p>
-            </div>
-            <div class="product-quantity">
-              <p>2.200.00 đ</p>
-              <p class="brand-name">x1</p>
-            </div>
-          </div>
-
-          <div class="product-info-payment">
-            <img
-              src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-              class="img-product-payment"
-              alt=""
-            />
-            <div  class="order-summary">
-              <p class="bold-text">Giày thể thao nam</p>
-              <p class="brand-name">Đỏ/27</p>
-            </div>
-            <div class="product-quantity">
-              <p>2.200.00 đ</p>
-              <p class="brand-name">x1</p>
-            </div>
-          </div>
-          <div class="product-info-payment">
-            <img
-              src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-              class="img-product-payment"
-              alt=""
-            />
-            <div  class="order-summary">
-              <p class="bold-text">Giày thể thao nam</p>
-              <p class="brand-name">Đỏ/27</p>
-            </div>
-            <div class="product-quantity">
-              <p>2.200.00 đ</p>
-              <p class="brand-name">x1</p>
-            </div>
-          </div>
-          <div class="product-info-payment">
-            <img
-              src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-              class="img-product-payment"
-              alt=""
-            />
-            <div  class="order-summary">
-              <p class="bold-text">Giày thể thao nam</p>
-              <p class="brand-name">Đỏ/27</p>
-            </div>
-            <div class="product-quantity">
-              <p>2.200.00 đ</p>
-              <p class="brand-name">x1</p>
-            </div>
-          </div>
-          <div class="product-info-payment">
-            <img
-              src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-              class="img-product-payment"
-              alt=""
-            />
-            <div  class="order-summary">
-              <p class="bold-text">Giày thể thao nam</p>
-              <p class="brand-name">Đỏ/27</p>
-            </div>
-            <div class="product-quantity">
-              <p>2.200.00 đ</p>
-              <p class="brand-name">x1</p>
-            </div>
-          </div>
-          <div class="product-info-payment">
-            <img
-              src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-              class="img-product-payment"
-              alt=""
-            />
-            <div  class="order-summary">
-              <p class="bold-text">Giày thể thao nam</p>
-              <p class="brand-name">Đỏ/27</p>
-            </div>
-            <div class="product-quantity">
-              <p>2.200.00 đ</p>
-              <p class="brand-name">x1</p>
-            </div>
-          </div>
-          <div class="product-info-payment">
-            <img
-              src="../../components/icons/listicon/FZ5486-003-1_360x.webp"
-              class="img-product-payment"
-              alt=""
-            />
-            <div  class="order-summary">
-              <p class="bold-text">Giày thể thao nam</p>
-              <p class="brand-name">Đỏ/27</p>
-            </div>
-            <div class="product-quantity">
-              <p>2.200.00 đ</p>
-              <p class="brand-name">x1</p>
-            </div>
-          </div>
         </v-sheet>
-
 
         <div style="display: flex; align-items: center">
           <v-text-field
@@ -233,7 +111,7 @@
 
         <div class="wrap-div">
           <p>Tổng tiền hàng:</p>
-          <p>2000 đ</p>
+          <p>{{formatPrice(totalPrice)}}</p>
         </div>
         <div class="wrap-div">
           <p>Phí vận chuyển:</p>
@@ -241,7 +119,7 @@
         </div>
         <div class="wrap-div">
           <h3 class="bold-text">Tổng:</h3>
-          <h3 class="bold-text">2.000.888 đ</h3>
+          <h3 class="bold-text">{{formatPrice(totalPrice)}}</h3>
         </div>
 
       </v-col>
@@ -252,4 +130,18 @@
 <script setup lang="ts">
 import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
+import { useCartStore } from '@/stores/cartStore'
+import { onMounted } from 'vue'
+
+const cartStore = useCartStore()
+
+const selectedItems = cartStore.selectedCartItems
+const totalPrice = cartStore.totalPrice
+
+const formatPrice=(price: number) =>{
+  return Math.round(price).toLocaleString("vi-Vi") + " đ"
+}
+onMounted(() => {
+  console.log("Aaa " + cartStore.selectedCartItems)
+})
 </script>

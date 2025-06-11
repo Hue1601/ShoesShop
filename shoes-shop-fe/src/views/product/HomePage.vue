@@ -38,8 +38,8 @@
         <v-slide-group-item v-for="(product, index) in latestCollection" :key="index">
           <v-card
             class="ma-4"
-            height="380"
-            width="230"
+            height="400"
+            width="275"
             style="box-shadow: none"
             :to="`/product-detail/${product.id}`"
           >

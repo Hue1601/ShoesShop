@@ -207,6 +207,7 @@ import { useRoute } from 'vue-router'
 import { type ProductDetail, type SizeByColor, type Product } from '@/interface/interface.ts'
 import { useI18n } from 'vue-i18n'
 import router from '@/router'
+import { ElMessage } from 'element-plus';
 
 const { t } = useI18n()
 const route = useRoute()
@@ -306,7 +307,7 @@ const addToCart = async () => {
   const userId = Number(localStorage.getItem("userId"));
   const productId = selectedProductId.value;
   if (!productId) {
-    console.error("Không tìm thấy sản phẩm phù hợp!");
+    ElMessage.error("Không tìm thấy sản phẩm phù hợp!")
     return;
   }
 
@@ -314,8 +315,13 @@ const addToCart = async () => {
 };
 
 const selectedProductId = computed(() => {
+  const id = localStorage.getItem('userId')
+  if(id === null){
+    ElMessage.error("Vui lòng đăng nhập")
+    return
+  }
   if (!selectedColor.value || !selectedSize.value) {
-    console.error("Màu sắc hoặc kích thước chưa được chọn!");
+    ElMessage.error("Vui lòng chọn màu sắc và kích thước!");
     return null;
   }
 
