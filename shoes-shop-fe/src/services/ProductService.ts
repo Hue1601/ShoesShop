@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { DataTableRequest } from '@/share/DataTableRequest.ts'
 
 class ProductService {
   private ROOT_API = "http://localhost:8080/product";
@@ -11,12 +12,16 @@ class ProductService {
     const response = await  axios.get(`${this.ROOT_API}/five-product-latest-collection`)
     return response;
   }
-  async getAllProduct(filters = {}){
-    const response = await axios.get(`${this.ROOT_API}/products`,{
-      params:filters
+  async getAllProduct(params: DataTableRequest, filters = {}) {
+    const response = await axios.get(`${this.ROOT_API}/products`, {
+      params: {
+        ...params,
+        ...filters
+      }
     });
     return response;
   }
+
   async findAllProductOrderByAsc(){
     const response = await axios.get(`${this.ROOT_API}/products-asc`);
     return response;

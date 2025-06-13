@@ -79,6 +79,7 @@ import { type Product } from '@/interface/interface.ts'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRoute, useRouter } from 'vue-router'
+import { DataTableRequest } from '@/share/DataTableRequest.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -91,7 +92,12 @@ const page = ref(0)
 const size = 16
 const isLoading = ref(false)
 const hasMore = ref(true)
-
+const request: DataTableRequest = new DataTableRequest({
+  currentPage: 1,
+  perPage:10.,
+  filter:'',
+  sortDesc:true,
+})
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(price) + ' đ'
 }
@@ -125,8 +131,8 @@ const getAll = async () => {
   }
 
   try {
-    const res = await productService.getAllProduct(params)
-    const newProducts = res.data.content
+    const res = await productService.getAllProduct(request,params)
+    const newProducts = res.data.data.content
     if (newProducts.length < size) {
       hasMore.value = false
     }
