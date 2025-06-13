@@ -3,6 +3,8 @@ package org.example.shoesshopbe.Repo;
 import org.example.shoesshopbe.Model.Products;
 import org.example.shoesshopbe.Response.ProductDetailResponse;
 import org.example.shoesshopbe.Response.ProductResponse;
+import org.example.shoesshopbe.common.DataTableRequest;
+import org.example.shoesshopbe.common.DataTableResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
