@@ -16,7 +16,7 @@
             <p class="name-product">{{ product.productName }}</p>
             <p class="brand-name">{{ product.brandName }}</p>
 
-            <div v-if="product.discountPercentage" style="display: flex">
+            <div v-if="product.discountPercentage" style="display: flex;justify-content: space-between;">
               <p class="price" :class="{ 'origin-price': product.discountPercentage }">
                 {{ formatPrice(product.price) }}
               </p>

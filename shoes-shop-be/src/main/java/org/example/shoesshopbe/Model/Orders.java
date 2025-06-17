@@ -26,4 +26,25 @@ public class Orders {
     private String orderStatus;
 
     private LocalDateTime createdAt;
+
+    private String buyerName;
+
+    private String buyerEmail;
+
+    private String buyerPhoneNumber;
+
+    private BigDecimal shippingFee;
+
+    private Integer paymentType;
+
+    private BigDecimal amountPaid;
+
+    @ManyToOne
+    @JoinColumn(name="AddressID")
+    private Address address;
+
+    @ManyToOne
+    @JoinColumn(name="VoucherID")
+    private Voucher voucher;
+
 }

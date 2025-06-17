@@ -14,24 +14,37 @@
 
           <v-select
             label="Tỉnh/thành phố"
+            :items="provinces"
+            item-title="ProvinceName"
+            item-value="ProvinceID"
+            v-model="selectedProvinceId"
             variant="outlined"
             hide-details
             density="compact"
-          ></v-select>
+          />
           <div class="input-location">
             <v-select
               label="Quận/huyện"
+              :items="districts"
+              item-title="DistrictName"
+              item-value="DistrictID"
+              v-model="selectedDistrictId"
               variant="outlined"
               hide-details
               density="compact"
               style="margin-right: 10px"
-            ></v-select>
+            />
+
             <v-select
               label="Phường/xã"
+              :items="wards"
+              item-title="WardName"
+              item-value="WardCode"
+              v-model="selectedWardId"
               variant="outlined"
               hide-details
               density="compact"
-            ></v-select>
+            />
           </div>
 
           <div class="input-location">
@@ -131,17 +144,60 @@
 import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
 import { useCartStore } from '@/stores/cartStore'
-import { onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
+import {paymentService} from '@/services/PaymentService.ts'
 
 const cartStore = useCartStore()
 
 const selectedItems = cartStore.selectedCartItems
-const totalPrice = cartStore.totalPrice
+const totalPrice = cartStore.totalPrice;
+const provinces = ref<[]>([])
+const districts = ref<[]>([])
+const commune = ref<[]>([])
+const selectedProvinceId = ref<number | null | undefined>(null)
+const selectedDistrictId = ref<number | null | undefined>(null)
+const selectedWardId = ref<string | null | undefined>(null)
+
 
 const formatPrice=(price: number) =>{
-  return Math.round(price).toLocaleString("vi-Vi") + " đ"
+  return Math.round(price).toLocaleString("vi-VN") + " đ"
 }
+const getProvinces = async () => {
+  const res = await paymentService.getProvince()
+  if (res.code === 200 && Array.isArray(res.data)) {
+    provinces.value = res.data
+  }
+}
+
+const getDistricts = async (provinceId: number) => {
+  const res = await paymentService.getDistrict(provinceId)
+  if (res.code === 200 && Array.isArray(res.data)) {
+    districts.value = res.data
+  }
+}
+
+const getCommune = async (districtId: number) => {
+  const res = await paymentService.getCommune(districtId)
+  if (res.code === 200 && Array.isArray(res.data)) {
+    commune.value = res.data
+  }
+}
+watch(selectedProvinceId, (newVal) => {
+  if (newVal) {
+    getDistricts(newVal)
+    selectedDistrictId.value = null
+    commune.value = []
+  }
+})
+
+watch(selectedDistrictId, (newVal) => {
+  if (newVal) {
+    getCommune(newVal)
+    selectedWardId.value = null
+  }
+})
 onMounted(() => {
   console.log("Aaa " + cartStore.selectedCartItems)
+   getProvinces()
 })
 </script>

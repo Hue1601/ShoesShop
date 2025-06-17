@@ -63,9 +63,7 @@ public class ProductController {
             products = sitebarService.findAllProducts(discount, gender, brand, collection, color, price,keyword,pageable);
             return new Response().data(products);
         }
-//         products = productService.findAllProduct(pageable);
         products = productService.findAllProduct(request);
-//        return new ResponseEntity<>(products, HttpStatus.OK);
         return Response.build().ok().data(products);
     }
 
