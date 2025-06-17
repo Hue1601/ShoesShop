@@ -82,8 +82,11 @@
 
         <v-sheet>
           <h2 class="bold-text">Thanh toán</h2>
-          <v-radio label="Thanh toán khi nhận hàng (COD)" />
-          <v-radio label="Thanh toán bằng chuyển khoản" />
+          <v-radio-group >
+            <v-radio label="Thanh toán khi nhận hàng (COD)" value="COD" />
+            <v-radio label="Thanh toán bằng chuyển khoản" value="BANK_TRANSFER" />
+          </v-radio-group>
+
           <v-checkbox label="Yêu cầu xuất hóa đơn" hide-details />
           <v-checkbox
             label="Tôi đồng ý với Điều khoản và Chính sách quy định bởi shop"

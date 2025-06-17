@@ -58,3 +58,29 @@ export interface Cart{
   price: number,
   discountPercentage: number
 }
+
+export interface ShippingFee{
+  from_district_id: number, // Mã cố định kho xuất phát của bạn
+  to_district_id:number,
+  to_commune_code: number,
+  height: number,
+  length: number,
+  weight: number,
+  width: number,
+  insurance_value:number
+}
+
+export interface Payment{
+  totalAmount:number,
+  buyerName:string,
+  buyerEmail:string,
+  buyerPhoneNumber:string,
+  shippingFee: number,
+  paymentType: number,
+  amountPaid: number,
+  communeValue:undefined,
+  districtValue:undefined,
+  provinceValue:undefined
+}
+
+

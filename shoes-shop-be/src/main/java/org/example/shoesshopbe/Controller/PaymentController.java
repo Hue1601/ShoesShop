@@ -18,6 +18,7 @@ public class PaymentController {
     @Value("${ghn.token}")
     private String token;
 
+    // RestTemplate là công cụ giúp gửi HTTP request từ Java tới API bên ngoài
     private final RestTemplate restTemplate;
 
     public PaymentController(RestTemplate restTemplate) {
@@ -39,14 +40,19 @@ public class PaymentController {
     public ResponseEntity<?> getDistricts(@RequestParam int province_id) {
         HttpHeaders headers = getHeaders();
         headers.set("Content-Type", "application/json");
-
+        //Tạo nội dung (payload) cho request POST, dạng chuỗi JSON:
         String body = String.format("{\"province_id\": %d}", province_id);
+       //Gói cả headers và body lại thành một HttpEntity để gửi trong RestTemplate.
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
 
         String url = "https://online-gateway.ghn.vn/shiip/public-api/master-data/district";
+        //Gửi request tới GHN bằng RestTemplate với"
+        //url: địa chỉ API
+        //HttpMethod.POST: dùng phương thức POST
+        //entity: bao gồm cả headers và body
+        //String.class: kiểu dữ liệu mong muốn nhận về là chuỗi JSON (kiểu String)
         return restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
     }
-
 
     @PostMapping("/commune")
     public ResponseEntity<?> getWards(@RequestParam int district_id) {
@@ -59,13 +65,16 @@ public class PaymentController {
         String url = "https://online-gateway.ghn.vn/shiip/public-api/master-data/ward";
         return restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
     }
+
     @PostMapping("/shipping-fee")
     public ResponseEntity<?> calculateShippingFee(@RequestBody PaymentRequest paymentRequest) {
         HttpHeaders headers = getHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         // 1. Call /available-services
-        int shopId = 123456; // TODO: Replace with your actual shop ID
+        int shopId = 5839993;
+
+//      //Tạo request object gửi lên GHN để tra các dịch vụ phù hợp từ quận A → quận B.
         AvailableServiceRequest serviceReq = new AvailableServiceRequest(
                 shopId,
                 paymentRequest.getFrom_district_id(),
@@ -76,6 +85,7 @@ public class PaymentController {
 
         String serviceUrl = "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/available-services";
 
+        //GHN trả về JSON chứa danh sách các dịch vụ → ánh xạ thành AvailableServiceResponse.
         ResponseEntity<AvailableServiceResponse> serviceResp = restTemplate.exchange(
                 serviceUrl,
                 HttpMethod.POST,
@@ -109,6 +119,4 @@ public class PaymentController {
 
         return restTemplate.exchange(feeUrl, HttpMethod.POST, feeEntity, String.class);
     }
-
-
 }
