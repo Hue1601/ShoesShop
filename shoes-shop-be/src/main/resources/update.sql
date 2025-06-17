@@ -31,7 +31,6 @@ CREATE TABLE Address (
     ProvinceValue Int
 )
 
-
 CREATE TABLE Voucher(
     ID int identity (1,1) primary key,
     Code  NVARCHAR(50),

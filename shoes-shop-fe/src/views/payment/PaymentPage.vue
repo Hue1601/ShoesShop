@@ -37,7 +37,7 @@
 
             <v-select
               label="Phường/xã"
-              :items="wards"
+              :items="commune"
               item-title="WardName"
               item-value="WardCode"
               v-model="selectedWardId"
@@ -128,11 +128,11 @@
         </div>
         <div class="wrap-div">
           <p>Phí vận chuyển:</p>
-          <p>2000 đ</p>
+          <p>{{formatPrice(shippingFee)}}</p>
         </div>
         <div class="wrap-div">
           <h3 class="bold-text">Tổng:</h3>
-          <h3 class="bold-text">{{formatPrice(totalPrice)}}</h3>
+          <h3 class="bold-text">{{formatPrice(totalPrice + shippingFee)}}</h3>
         </div>
 
       </v-col>
@@ -146,7 +146,7 @@ import Footer from '../../components/common/FooterPage.vue'
 import { useCartStore } from '@/stores/cartStore'
 import { onMounted, ref, watch } from 'vue'
 import {paymentService} from '@/services/PaymentService.ts'
-
+import {type ShippingFee} from '@/interface/interface.ts'
 const cartStore = useCartStore()
 
 const selectedItems = cartStore.selectedCartItems
@@ -156,8 +156,8 @@ const districts = ref<[]>([])
 const commune = ref<[]>([])
 const selectedProvinceId = ref<number | null | undefined>(null)
 const selectedDistrictId = ref<number | null | undefined>(null)
-const selectedWardId = ref<string | null | undefined>(null)
-
+const selectedWardId = ref<number | null | undefined>(null)
+const shippingFee = ref<number>(0)
 
 const formatPrice=(price: number) =>{
   return Math.round(price).toLocaleString("vi-VN") + " đ"
@@ -182,6 +182,34 @@ const getCommune = async (districtId: number) => {
     commune.value = res.data
   }
 }
+
+const getShippingFee = async () => {
+  // Chỉ gửi khi đủ điều kiện
+  if (!selectedDistrictId.value || !selectedWardId.value) return
+
+  const payload: ShippingFee = {
+    from_district_id: 1450, // Mã cố định kho xuất phát của bạn
+    to_district_id: selectedDistrictId.value,
+    to_commune_code: selectedWardId.value,
+    height: 10,
+    length: 20,
+    weight: 1000,
+    width: 15,
+    insurance_value: totalPrice || 0,
+  }
+
+  try {
+    const res = await paymentService.calculateShippingFee(payload)
+    if (res.code === 200 && res.data?.total) {
+      shippingFee.value = res.data.total
+      console.warn(" vận chuyển:", res.data.total)
+    } else {
+      console.warn("Không lấy được phí vận chuyển:", res)
+    }
+  } catch (error) {
+    console.error("Lỗi lấy phí ship:", error)
+  }
+}
 watch(selectedProvinceId, (newVal) => {
   if (newVal) {
     getDistricts(newVal)
@@ -194,6 +222,11 @@ watch(selectedDistrictId, (newVal) => {
   if (newVal) {
     getCommune(newVal)
     selectedWardId.value = null
+  }
+})
+watch([selectedDistrictId, selectedWardId], ([district, ward]) => {
+  if (district && ward) {
+    getShippingFee()
   }
 })
 onMounted(() => {

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 class PaymentService{
-  private baseURL = "http://localhost:8080/api/address";
+  private baseURL = "http://localhost:8080/api/payment";
   async getProvince(){
     const response = await axios.get(`${this.baseURL}/provinces`)
     return response.data;
@@ -17,6 +17,10 @@ class PaymentService{
     const response = await axios.post(`${this.baseURL}/commune`, null, {
       params: { district_id: districtId }
     });
+    return response.data;
+  }
+  async calculateShippingFee(body:any) {
+    const response = await axios.post(`${this.baseURL}/shipping-fee`, body);
     return response.data;
   }
 }
