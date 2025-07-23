@@ -5,7 +5,7 @@
       <v-col cols="7">
         <v-sheet>
           <h2 class="bold-text">Thông tin liên lạc</h2>
-          <v-text-field label="Email" variant="outlined" hide-details density="compact" />
+          <v-text-field label="Email" variant="outlined" hide-details density="compact" v-model="payment.buyerEmail"/>
           <v-checkbox label="Gửi email cho tôi tin tức và ưu đãi qua mail" hide-details />
         </v-sheet>
 
@@ -14,10 +14,10 @@
 
           <v-select
             label="Tỉnh/thành phố"
-            :items="provinces"
+            :items="listProvinces"
             item-title="ProvinceName"
             item-value="ProvinceID"
-            v-model="selectedProvinceId"
+            v-model="payment.province"
             variant="outlined"
             hide-details
             density="compact"
@@ -25,43 +25,38 @@
           <div class="input-location">
             <v-select
               label="Quận/huyện"
-              :items="districts"
+              :items="listDistricts"
               item-title="DistrictName"
               item-value="DistrictID"
-              v-model="selectedDistrictId"
+              v-model="payment.district"
               variant="outlined"
               hide-details
               density="compact"
               style="margin-right: 10px"
+              :disabled="!isSelectedProvince"
             />
 
             <v-select
               label="Phường/xã"
-              :items="commune"
+              :items="listCommunes"
               item-title="WardName"
               item-value="WardCode"
-              v-model="selectedWardId"
+              v-model="payment.commune"
               variant="outlined"
               hide-details
               density="compact"
+              disabled
             />
           </div>
 
-          <div class="input-location">
             <v-text-field
               label="Tên"
-              style="margin-right: 10px"
+              style="margin-bottom: 10px"
               variant="outlined"
               hide-details
               density="compact"
+              v-model="payment.buyerName"
             ></v-text-field>
-            <v-text-field
-              label="Họ"
-              variant="outlined"
-              hide-details
-              density="compact"
-            ></v-text-field>
-          </div>
 
           <v-text-field
             label="Địa chỉ"
@@ -69,6 +64,7 @@
             hide-details
             density="compact"
             align-top="5"
+
           ></v-text-field>
           <v-text-field
             label="Số điện thoại"
@@ -76,13 +72,14 @@
             hide-details
             density="compact"
             style="margin-top: 10px"
+            v-model="payment.buyerPhoneNumber"
           ></v-text-field>
           <v-checkbox label="Lưu thông tin này" hide-details />
         </v-sheet>
 
         <v-sheet>
           <h2 class="bold-text">Thanh toán</h2>
-          <v-radio-group >
+          <v-radio-group v-model="payment.paymentType">
             <v-radio label="Thanh toán khi nhận hàng (COD)" value="COD" />
             <v-radio label="Thanh toán bằng chuyển khoản" value="BANK_TRANSFER" />
           </v-radio-group>
@@ -150,50 +147,52 @@ import { useCartStore } from '@/stores/cartStore'
 import { onMounted, ref, watch } from 'vue'
 import {paymentService} from '@/services/PaymentService.ts'
 import {type ShippingFee} from '@/interface/interface.ts'
-const cartStore = useCartStore()
+import {Payment} from '@/model/Payment.ts'
 
+const cartStore = useCartStore()
 const selectedItems = cartStore.selectedCartItems
 const totalPrice = cartStore.totalPrice;
-const provinces = ref<[]>([])
-const districts = ref<[]>([])
-const commune = ref<[]>([])
-const selectedProvinceId = ref<number | null | undefined>(null)
-const selectedDistrictId = ref<number | null | undefined>(null)
-const selectedWardId = ref<number | null | undefined>(null)
+const listProvinces = ref<[]>([])
+const listDistricts = ref<[]>([])
+const listCommunes = ref<[]>([])
+const payment = ref(new Payment())
+// const selectedProvinceId = ref<number | null | undefined>(null)
+// const selectedDistrictId = ref<number | null | undefined>(null)
+// const selectedWardId = ref<number | null | undefined>(null)
 const shippingFee = ref<number>(0)
-
+const isSelectedProvince = ref(false)
 const formatPrice=(price: number) =>{
   return Math.round(price).toLocaleString("vi-VN") + " đ"
 }
 const getProvinces = async () => {
   const res = await paymentService.getProvince()
   if (res.code === 200 && Array.isArray(res.data)) {
-    provinces.value = res.data
+    listProvinces.value = res.data
   }
 }
 
 const getDistricts = async (provinceId: number) => {
   const res = await paymentService.getDistrict(provinceId)
   if (res.code === 200 && Array.isArray(res.data)) {
-    districts.value = res.data
+    listDistricts.value = res.data
   }
 }
 
 const getCommune = async (districtId: number) => {
   const res = await paymentService.getCommune(districtId)
   if (res.code === 200 && Array.isArray(res.data)) {
-    commune.value = res.data
+    listCommunes.value = res.data
   }
 }
 
 const getShippingFee = async () => {
   // Chỉ gửi khi đủ điều kiện
-  if (!selectedDistrictId.value || !selectedWardId.value) return
+  if (!payment.value.district || !payment.value.commune) return
 
   const payload: ShippingFee = {
     from_district_id: 1450, // Mã cố định kho xuất phát của bạn
-    to_district_id: selectedDistrictId.value,
-    to_commune_code: selectedWardId.value,
+    to_district_id: payment.value.district,
+    to_commune_code: payment.value.commune,
     height: 10,
     length: 20,
     weight: 1000,
@@ -213,25 +212,30 @@ const getShippingFee = async () => {
     console.error("Lỗi lấy phí ship:", error)
   }
 }
-watch(selectedProvinceId, (newVal) => {
+watch(() => payment.value.province, (newVal) => {
+  isSelectedProvince.value = newVal !== null && newVal !== undefined
+
+  // Nếu bạn muốn tự động tải huyện khi có tỉnh
   if (newVal) {
     getDistricts(newVal)
-    selectedDistrictId.value = null
-    commune.value = []
+  } else {
+    listDistricts.value = []
+    payment.value.district = null
   }
 })
 
-watch(selectedDistrictId, (newVal) => {
-  if (newVal) {
-    getCommune(newVal)
-    selectedWardId.value = null
-  }
-})
-watch([selectedDistrictId, selectedWardId], ([district, ward]) => {
-  if (district && ward) {
-    getShippingFee()
-  }
-})
+//
+// watch(selectedDistrictId, (newVal) => {
+//   if (newVal) {
+//     getCommune(newVal)
+//     selectedWardId.value = null
+//   }
+// })
+// watch([selectedDistrictId, selectedWardId], ([district, ward]) => {
+//   if (district && ward) {
+//     getShippingFee()
+//   }
+// })
 onMounted(() => {
   console.log("Aaa " + cartStore.selectedCartItems)
    getProvinces()

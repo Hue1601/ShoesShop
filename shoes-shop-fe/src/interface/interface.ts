@@ -70,17 +70,6 @@ export interface ShippingFee{
   insurance_value:number
 }
 
-export interface Payment{
-  totalAmount:number,
-  buyerName:string,
-  buyerEmail:string,
-  buyerPhoneNumber:string,
-  shippingFee: number,
-  paymentType: number,
-  amountPaid: number,
-  communeValue:undefined,
-  districtValue:undefined,
-  provinceValue:undefined
-}
+
 
 
