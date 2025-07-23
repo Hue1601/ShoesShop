@@ -11,6 +11,8 @@ import App from './App.vue'
 import router from './router'
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
 
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
@@ -34,4 +36,6 @@ app.use(router)
 app.use(vuetify);
 app.use(i18n);
 app.mount('#app')
+app.use(ElementPlus)
+
 

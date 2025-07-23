@@ -1,5 +1,6 @@
 package org.example.shoesshopbe.PrimaryKey;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,9 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductDiscountsKey implements Serializable {
+    @Column(name = "ProductID")
     private Integer product;
+    @Column(name = "DiscountID")
     private Integer discount;
 
     @Override

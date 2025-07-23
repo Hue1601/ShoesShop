@@ -7,6 +7,7 @@ import org.example.shoesshopbe.Repo.ProductRepo;
 import org.example.shoesshopbe.Response.ProductDetailResponse;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.example.shoesshopbe.Response.SizeByColorResponse;
+import org.example.shoesshopbe.common.DataTableRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,10 +35,13 @@ public class ProductService {
         return productRepo.findTop5ProductsFromLatestCollection();
     }
 
-    public Page<ProductResponse> findAllProduct(Pageable pageable) {
-        return productRepo.findAllProducts(pageable);
-    }
-
+//    public Page<ProductResponse> findAllProduct(Pageable pageable) {
+//        return productRepo.findAllProducts(pageable);
+//    }
+public Page<ProductResponse> findAllProduct(DataTableRequest request) {
+        PageRequest pageable = request.toPageable();
+    return productRepo.findAllProducts(pageable);
+}
     public List<ProductResponse> findAllProductOrderByAsc() {
         return productRepo.findAllProductsOrderByAsc();
     }

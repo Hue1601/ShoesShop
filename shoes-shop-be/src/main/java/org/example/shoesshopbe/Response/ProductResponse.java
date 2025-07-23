@@ -15,4 +15,5 @@ public class ProductResponse {
     private String brandName;
     private BigDecimal price;
     private String imageUrl;
+    private Float discountPercentage;
 }

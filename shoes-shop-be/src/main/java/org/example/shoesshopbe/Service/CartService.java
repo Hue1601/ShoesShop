@@ -74,12 +74,6 @@ public class CartService {
                 .orElseThrow(() -> new RuntimeException("Product detail not found"));
         cartItemRepo.deleteById(productDetail.getId());
     }
-//    public void updateCartItem(Integer productDetailId, Integer quantity) {
-//        CartItems cartItem = cartItemRepo.findByProductDetailId(productDetailId)
-//                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm trong giỏ hàng"));
-//
-//        cartItem.setQuantity(quantity);
-//        cartRepository.save(cartItem);
-//    }
+
 
 }

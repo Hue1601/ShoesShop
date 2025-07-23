@@ -1,6 +1,6 @@
 <template >
   <v-toolbar class="header" density="comfortable">
-    <span class="shop-name">{{ t('header.shop-name') }}</span>
+    <span class="shop-name" @click="() => router.push('/home')" >{{ t('header.shop-name') }}</span>
     <router-link to="/home" class="header-item text"> {{ t('header.home') }}</router-link>
     <router-link to="/list-product" class="header-item text">
       {{ t('header.product') }}
@@ -51,7 +51,29 @@
       alt=""
       @click="() => router.push('/cart')"
     />
-    <img src="../../components/icons/listicon/User.png" class="icon-header" alt="" />
+    <v-menu open-on-hover>
+      <template v-slot:activator="{ props }">
+        <img
+          src="../../components/icons/listicon/User.png"
+          class="icon-header"
+          v-bind="props"
+          style="cursor: pointer"
+        />
+      </template>
+      <v-list>
+        <v-list-item>Setting</v-list-item>
+        <v-divider/>
+        <v-list-item @click="() => router.push('/register')">Register</v-list-item>
+        <v-divider/>
+
+        <v-list-item @click="handleAuthClick">
+          <v-list-item-title>
+            {{ userId ? 'Logout' : 'Login' }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+
   </v-toolbar>
 
   <v-card class="card-search" v-if="selectSearch.keyword && filterProduct.length > 0">
@@ -59,13 +81,12 @@
          <img :src="product.imageUrl" class="img-product-search" alt="" />
          <p class="bold-text">{{product.productName}}</p>
        </div>
-    </v-card>
-
+  </v-card>
 </template>
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { type Interface } from '@/interface/interface.ts'
+import { type Brand } from '@/interface/interface.ts'
 import { brandService } from '@/services/BrandService.ts'
 import { computed, onMounted, ref } from 'vue'
 import { productService } from '@/services/ProductService.ts'
@@ -73,10 +94,10 @@ import {type Product} from '@/interface/interface.ts'
 
 const { t } = useI18n()
 const router = useRouter()
-const listBrand = ref<Interface[]>([])
+const listBrand = ref<Brand[]>([])
 const products = ref<Product[]>([])
 const selectSearch = ref<{ keyword: string }>({ keyword: '' })
-
+const userId= localStorage.getItem('userId')
 const getAllBrand = async () => {
   const res = await brandService.getAll()
   listBrand.value = res.data
@@ -100,6 +121,16 @@ const filterProduct = computed(() => {
     product.productName.toLowerCase().includes(selectSearch.value.keyword.toLowerCase()),
   )
 })
+
+
+const  handleAuthClick =() => {
+  if (userId) {
+    localStorage.removeItem('userId')
+    router.push('/')
+  } else {
+    router.push('/');
+  }
+}
 onMounted(() => {
   getAllBrand()
   getAll()

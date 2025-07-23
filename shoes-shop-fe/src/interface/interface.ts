@@ -16,6 +16,7 @@ export interface Product {
   brandName: string
   price: number
   imageUrl: string
+  discountPercentage: number
 }
 export interface Collection {
   id: number
@@ -57,3 +58,18 @@ export interface Cart{
   price: number,
   discountPercentage: number
 }
+
+export interface ShippingFee{
+  from_district_id: number, // Mã cố định kho xuất phát của bạn
+  to_district_id:number,
+  to_commune_code: number,
+  height: number,
+  length: number,
+  weight: number,
+  width: number,
+  insurance_value:number
+}
+
+
+
+

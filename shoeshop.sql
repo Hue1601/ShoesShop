@@ -65,7 +65,15 @@ CREATE TABLE Orders (
     UserID INT FOREIGN KEY REFERENCES Users(ID),
     TotalAmount DECIMAL(18,2) NOT NULL,
     OrderStatus NVARCHAR(50) ,
-    CreatedAt DATETIME DEFAULT GETDATE()
+    CreatedAt DATETIME DEFAULT GETDATE(),
+	BuyerEmail NVARCHAR(50),
+    BuyerName NVARCHAR(50),
+    BuyerPhoneNumber NVARCHAR(50),
+    ShippingFee DECIMAL(18,2),
+    PaymentType Int,
+    AmountPaid DECIMAL (18,2),
+    AddressID INT FOREIGN KEY REFERENCES Address(ID),
+    VoucherID INT FOREIGN KEY REFERENCES Voucher(ID)
 );
 
 CREATE TABLE OrderDetails (
@@ -73,7 +81,8 @@ CREATE TABLE OrderDetails (
     OrderId INT FOREIGN KEY REFERENCES Orders(Id),
     ProductDetailId INT FOREIGN KEY REFERENCES ProductDetails(Id),
     Quantity INT NOT NULL,
-    Price DECIMAL(18,2) NOT NULL
+    Price DECIMAL(18,2) NOT NULL,
+	PriceAtPurchase DECIMAL(18,2)
 );
 
 CREATE TABLE Collections (
@@ -115,3 +124,27 @@ CategoryID INT FOREIGN KEY REFERENCES Category(ID) ,
   PRIMARY KEY (ProductID, CategoryID)
  )
 
+ CREATE TABLE Address (
+    ID int identity (1,1) primary key,
+    AddressDetail NVARCHAR(255),
+    CommuneLabel  NVARCHAR(255),
+    CommuneValue Int,
+    DistrictLabel  NVARCHAR(255),
+    DistrictValue Int,
+    ProvinceLabel  NVARCHAR(255),
+    ProvinceValue Int
+)
+
+CREATE TABLE Voucher(
+    ID int identity (1,1) primary key,
+    Code  NVARCHAR(50),
+    CreatedAt DATETIME,
+    StartAt DATETIME,
+    EndDate DATETIME,
+    UpdateDate DATETIME,
+    Name  NVARCHAR(255),
+    Quantity int,
+    MaxValue DECIMAL(18,2),
+    Type int,
+    Value DECIMAL(18,2)
+)

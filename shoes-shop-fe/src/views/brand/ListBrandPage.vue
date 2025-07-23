@@ -1,7 +1,7 @@
 
 <template>
   <Header/>
-  <v-container>
+  <v-container style="height:550px; ">
      <h2 class="bold-text">THƯƠNG HIỆU NỔI BẬT</h2>
     <v-card class="list-brand">
     <v-card-item v-for="(brand, index) in listBrand" :key="index" style="padding: 0.625rem 0.95rem">

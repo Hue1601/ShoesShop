@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <v-container max-width="94%" style="min-height:412px; max-height:fit-content">
+  <v-container max-width="94%" style="min-height: 550px">
     <div style="display: flex">
       <Sitebar />
       <div class="list-product">
@@ -24,7 +24,7 @@
         </p>
         <v-list class="list-arrange" v-if="showListArrange">
           <v-list-item @click="getAll">{{ t('list-product.new-to-old') }}</v-list-item>
-          <v-list-item @click="arrangeOldToNew">{{ t('list-product.old-to-new') }} </v-list-item>
+          <v-list-item @click="arrangeOldToNew">{{ t('list-product.old-to-new') }}</v-list-item>
           <v-list-item @click="arrangePriceAsc">{{ t('list-product.price-asc') }}</v-list-item>
           <v-list-item @click="arrangePriceDesc">{{ t('list-product.price-desc') }}</v-list-item>
         </v-list>
@@ -32,8 +32,8 @@
         <v-list class="product-list">
           <v-card
             class="ma-4"
-            height="380"
-            width="249"
+            height="400"
+            width="275"
             style="box-shadow: none"
             v-for="(product, index) in products"
             :key="index"
@@ -41,20 +41,27 @@
           >
             <div class="">
               <img :src="product.imageUrl" class="img-product" alt="" />
-              <!--              <div class="color-options">-->
-              <!--                <v-btn-->
-              <!--                  v-for="(color, i) in product.color"-->
-              <!--                  :key="i"-->
-              <!--                  class="mx-1 color-btn"-->
-              <!--                  icon-->
-              <!--                  width="20"-->
-              <!--                  height="20"-->
-              <!--                  :style="{ backgroundColor: color }">-->
-              <!--                </v-btn>-->
-              <!--              </div>-->
+<!--              <div class="color-options">-->
+<!--                <v-btn-->
+<!--                  v-for="(color, i) in product.color" :key="i" class="mx-1 color-btn" icon-->
+<!--                  width="20" height="20" :style="{ backgroundColor: color }">-->
+<!--                </v-btn>-->
+<!--              </div>-->
               <p class="name-product">{{ product.productName }}</p>
               <p class="brand-name">{{ product.brandName }}</p>
-              <p class="price">{{ formatPrice(product.price) }}</p>
+
+              <div style="display: flex">
+                <p class="price" :class="{ 'origin-price': product.discountPercentage }">
+                  {{ formatPrice(product.price) }}
+                </p>
+
+                <p class="discount-price display-discount" v-if="product.discountPercentage">
+                  {{ formatPrice(product.price * (1 - product.discountPercentage / 100)) }}
+                </p>
+                <p class="product-discount-badge" v-if="product.discountPercentage">
+                  {{ product.discountPercentage }} %
+                </p>
+              </div>
             </div>
           </v-card>
         </v-list>
@@ -68,10 +75,11 @@ import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
 import Sitebar from '../../components/common/SitebarPage.vue'
 import { productService } from '@/services/ProductService.ts'
-import {type Product} from '@/interface/interface.ts'
+import { type Product } from '@/interface/interface.ts'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
+import { DataTableRequest } from '@/share/DataTableRequest.ts'
 
 const route = useRoute()
 const router = useRouter()
@@ -84,7 +92,12 @@ const page = ref(0)
 const size = 16
 const isLoading = ref(false)
 const hasMore = ref(true)
-
+const request: DataTableRequest = new DataTableRequest({
+  currentPage: 1,
+  perPage:10.,
+  filter:'',
+  sortDesc:true,
+})
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('vi-VN', { maximumFractionDigits: 0 }).format(price) + ' đ'
 }
@@ -118,8 +131,8 @@ const getAll = async () => {
   }
 
   try {
-    const res = await productService.getAllProduct(params)
-    const newProducts = res.data.content
+    const res = await productService.getAllProduct(request,params)
+    const newProducts = res.data.data.content
     if (newProducts.length < size) {
       hasMore.value = false
     }
@@ -155,12 +168,16 @@ const handleScroll = () => {
   }
 }
 
-watch(() => route.query, () => {
-  products.value = []
-  page.value = 0
-  hasMore.value = true
-  getAll()
-}, { deep: true })
+watch(
+  () => route.query,
+  () => {
+    products.value = []
+    page.value = 0
+    hasMore.value = true
+    getAll()
+  },
+  { deep: true },
+)
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
@@ -170,5 +187,4 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
-
 </script>

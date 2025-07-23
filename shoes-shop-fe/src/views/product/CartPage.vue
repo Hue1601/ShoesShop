@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <v-container style="min-height: 445px; ">
+  <v-container style="min-height: 550px; ">
     <h2 class="bold-text">{{ t('cart.cart') }}</h2>
     <div class="product-cart" style="height: 45px">
       <v-checkbox
@@ -86,11 +86,12 @@
             <p class="right-text">{{ t('cart.into-money') }}</p>
           </v-col>
           <v-col>
-            <p class="total-price">1.195.000 đ</p>
+            <p class="total-price">{{ formatPrice(totalPrice) }}</p>
           </v-col>
         </v-row>
 
-        <v-btn class="btn" to="/payment">{{ t('cart.btn-payment') }}</v-btn>
+        <v-btn class="btn" @click="goToPayment">{{ t('cart.btn-payment') }}</v-btn>
+
         <p class="notice">{{ t('cart.note') }}</p>
       </div>
     </div>
@@ -105,16 +106,21 @@ import { cartService } from '@/services/CartService.ts'
 import { computed, onMounted, ref, watch } from 'vue'
 import { type Cart } from '@/interface/interface.ts'
 import debounce from 'lodash/debounce';
+import {ElMessage} from 'element-plus';
+import router from '@/router'
+import { useCartStore } from '@/stores/cartStore'
 
 const { t } = useI18n()
 const cart = ref<Cart[]>([])
 const selectAll = ref(false)
 const selectedIds = ref<number[]>([])
+const cartStore = useCartStore()
 
 const getCart = async () => {
   const id = localStorage.getItem('userId')
   if(id === null){
-    alert("vui lòng đăng nhập ")
+    ElMessage.error("Vui lòng đăng nhập")
+    router.back()
     return
   }
   const response = await cartService.getCart(id)
@@ -128,7 +134,7 @@ const updateQuantity = debounce (async (item) => {
   try {
     await cartService.updateQuantity(item.productDetailId, item.quantity);
   } catch (error) {
-    console.error('Cập nhật số lượng thất bại', error);
+   ElMessage.error("Cập nhật số lươn thất bại")
   }
 }, 500); // Đợi 500ms sau khi người dùng ngừng nhập mới gửi request
 
@@ -138,7 +144,7 @@ const deleteProduct = async (id:number) =>{
   cart.value = cart.value.filter(item => item.productDetailId !== id);
 }
 const formatPrice=(price: number) =>{
-  return Intl.NumberFormat('vi-VN', {maximumFractionDigits:0}).format(price) +" đ"
+  return Math.round(price).toLocaleString('vi-VN') + ' ₫';
 }
 const getFinalPrice = (item: Cart) => {
   const discount = item.discountPercentage || 0;
@@ -156,12 +162,17 @@ function toggleSelectItem(productDetailId:number) {
 
 const isSelected = (id:number) => selectedIds.value.includes(id)
 
-watch(selectAll, (val) => {
-  if (val) {
-    selectedIds.value = cart.value.map(item => item.productDetailId)
-  } else {
-    selectedIds.value = []
-  }
+// watch(selectAll, (val) => {
+//   if (val) {
+//     selectedIds.value = cart.value.map(item => item.productDetailId)
+//   } else {
+//     selectedIds.value = []
+//   }
+// })
+watch(selectedIds, () => {
+  cartStore.setSelectedItems(cart.value.filter(item =>
+    selectedIds.value.includes(item.productDetailId)
+  ))
 })
 
 const selectedItems = computed(() =>
@@ -178,6 +189,17 @@ const totalPrice = computed(() =>
     return acc + finalPrice * item.quantity
   }, 0)
 )
+
+const goToPayment = () => {
+  // Set selected items vào store
+  const selected = cart.value.filter(item =>
+    selectedIds.value.includes(item.productDetailId)
+  )
+  cartStore.setSelectedItems(selected)
+
+  router.push('/payment')
+}
+
 onMounted(() => {
    getCart()
 
