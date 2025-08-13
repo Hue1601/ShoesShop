@@ -1,3 +1,6 @@
+#app{
+    width:100%
+}
 /*Login*/
 .container {
     width: 40% !important;
@@ -175,7 +178,7 @@
 }
 .product-info{
     flex-grow: 1;
-    max-width: 367px;
+    max-width: 65%;
 }
 .total-price{
     font-weight: bold;

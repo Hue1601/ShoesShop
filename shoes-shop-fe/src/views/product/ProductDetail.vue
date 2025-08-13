@@ -62,7 +62,7 @@
           ></v-text-field>
         </div>
         <div class="d-flex brand-name" v-if="selectedSize">
-          <p>Số lượng còn lại: </p>
+          <p>Còn lại: </p>
           <p > {{stock }}</p>
         </div>
         <p class="bold-text">{{ t('product-detail.color') }}</p>
@@ -86,8 +86,8 @@
           >
             {{ size.size }}
           </v-btn>
-
         </div>
+
 
         <div class="size">
           <img src="../../components/icons/listicon/ruler.png" class="icon-product-detail" alt="" />
@@ -207,7 +207,9 @@ import { useRoute } from 'vue-router'
 import { type ProductDetail, type SizeByColor, type Product } from '@/interface/interface.ts'
 import { useI18n } from 'vue-i18n'
 import router from '@/router'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const { t } = useI18n()
 const route = useRoute()
 
@@ -306,16 +308,18 @@ const addToCart = async () => {
   const userId = Number(localStorage.getItem("userId"));
   const productId = selectedProductId.value;
   if (!productId) {
-    console.error("Không tìm thấy sản phẩm phù hợp!");
     return;
   }
 
-  await cartService.addToCart( productId, quantity.value,userId);
+  const cart =  await cartService.addToCart( productId, quantity.value,userId);
+  if(cart.status === 200){
+    toast.success("Đã thêm vào giỏ hàng")
+  }
 };
 
 const selectedProductId = computed(() => {
   if (!selectedColor.value || !selectedSize.value) {
-    console.error("Màu sắc hoặc kích thước chưa được chọn!");
+    toast.error(" Màu sắc hoặc kích thước chưa được chọn!")
     return null;
   }
 

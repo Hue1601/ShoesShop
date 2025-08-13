@@ -11,7 +11,8 @@ import App from './App.vue'
 import router from './router'
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
-
+import Toast from 'vue-toastification' // alert
+import 'vue-toastification/dist/index.css'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
@@ -33,5 +34,13 @@ app.use(createPinia())
 app.use(router)
 app.use(vuetify);
 app.use(i18n);
+app.use(Toast, {
+  position: 'top-right',
+  timeout: 3000,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  showCloseButtonOnHover: false,
+})
 app.mount('#app')
 
