@@ -207,6 +207,7 @@ import { useRoute } from 'vue-router'
 import { type ProductDetail, type SizeByColor, type Product } from '@/interface/interface.ts'
 import { useI18n } from 'vue-i18n'
 import router from '@/router'
+
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
@@ -255,7 +256,7 @@ const getProductDetail = async () => {
 }
 
 const formatPrice = (price: number) => {
-  return Intl.NumberFormat('vi-Vn', { maximumFractionDigits: 0 }).format(price) + ' đ'
+  return Math.round(price).toLocaleString('vi-VN') + ' đ'
 }
 
 const changeColor = async ( color: string) => {
@@ -308,6 +309,7 @@ const addToCart = async () => {
   const userId = Number(localStorage.getItem("userId"));
   const productId = selectedProductId.value;
   if (!productId) {
+   toast.error(" Không tìm thấy sản phẩm phù hợp!")
     return;
   }
 
@@ -318,6 +320,11 @@ const addToCart = async () => {
 };
 
 const selectedProductId = computed(() => {
+  const id = localStorage.getItem('userId')
+  if(id === null){
+    ElMessage.error("Vui lòng đăng nhập")
+    return
+  }
   if (!selectedColor.value || !selectedSize.value) {
     toast.error(" Màu sắc hoặc kích thước chưa được chọn!")
     return null;

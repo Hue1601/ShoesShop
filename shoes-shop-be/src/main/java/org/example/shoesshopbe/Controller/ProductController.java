@@ -1,11 +1,12 @@
 package org.example.shoesshopbe.Controller;
 
-import org.example.shoesshopbe.Model.ProductDetail;
 import org.example.shoesshopbe.Response.ProductDetailResponse;
 import org.example.shoesshopbe.Response.ProductResponse;
 import org.example.shoesshopbe.Response.SizeByColorResponse;
 import org.example.shoesshopbe.Service.ProductService;
 import org.example.shoesshopbe.Service.SitebarService;
+import org.example.shoesshopbe.common.DataTableRequest;
+import org.example.shoesshopbe.common.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -39,15 +40,16 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<?> findAllProducts(@RequestParam(required = false) List<String> discount,
-                                             @RequestParam(required = false) String gender,
-                                             @RequestParam(required = false) List<String> brand,
-                                             @RequestParam(required = false) List<String> collection,
-                                             @RequestParam(required = false) List<String> color,
-                                             @RequestParam(required = false) List<String> price,
-                                             @RequestParam(required = false) String keyword,
-                                             @RequestParam(defaultValue = "0") Integer page,
-                                             @RequestParam(defaultValue = "16") Integer size
+    public Response findAllProducts(DataTableRequest request,
+                                    @RequestParam(required = false) List<String> discount,
+                                    @RequestParam(required = false) String gender,
+                                    @RequestParam(required = false) List<String> brand,
+                                    @RequestParam(required = false) List<String> collection,
+                                    @RequestParam(required = false) List<String> color,
+                                    @RequestParam(required = false) List<String> price,
+                                    @RequestParam(required = false) String keyword,
+                                    @RequestParam(defaultValue = "0") Integer page,
+                                    @RequestParam(defaultValue = "16") Integer size
     ) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ProductResponse> products;
@@ -59,10 +61,10 @@ public class ProductController {
                 price != null && !price.isEmpty() ||
                 keyword != null && !keyword.isEmpty()) {
             products = sitebarService.findAllProducts(discount, gender, brand, collection, color, price,keyword,pageable);
-            return new ResponseEntity<>(products, HttpStatus.OK);
+            return new Response().data(products);
         }
-         products = productService.findAllProduct(pageable);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+        products = productService.findAllProduct(request);
+        return Response.build().ok().data(products);
     }
 
     @GetMapping("/search")

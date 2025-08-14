@@ -27,4 +27,7 @@ public class OrderDetails {
     private Integer quantity;
 
     private BigDecimal price;
+
+    @Column(name="PriceAtPurchase")
+    private BigDecimal priceAtPurchase;
 }

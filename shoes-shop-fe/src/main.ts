@@ -11,8 +11,13 @@ import App from './App.vue'
 import router from './router'
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
+
 import Toast from 'vue-toastification' // alert
 import 'vue-toastification/dist/index.css'
+
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
@@ -43,4 +48,6 @@ app.use(Toast, {
   showCloseButtonOnHover: false,
 })
 app.mount('#app')
+app.use(ElementPlus)
+
 

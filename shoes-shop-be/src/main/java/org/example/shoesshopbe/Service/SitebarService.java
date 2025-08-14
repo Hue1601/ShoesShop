@@ -97,12 +97,13 @@ public class SitebarService {
         };
         Page<Products> productList = productRepo.findAll(spec,pageable );
 
-        return productList.map(product -> new ProductResponse(
+        return productList.map(product ->new ProductResponse(
                 product.getId(),
                 product.getProductName(),
                 product.getBrand().getBrandName(),
                 product.getProductDetails().isEmpty() ? BigDecimal.ZERO : product.getProductDetails().get(0).getPrice(),
-                product.getProductImages().isEmpty() ? null : product.getProductImages().get(0).getImageUrl()
+                product.getProductImages().isEmpty() ? null : product.getProductImages().get(0).getImageUrl(),
+                product.getProductDiscounts().isEmpty()? null: product.getProductDiscounts().get(0).getDiscount().getDiscountPercentage()
         ));
 
 
