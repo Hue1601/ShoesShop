@@ -29,7 +29,7 @@
           <v-list-item @click="arrangePriceDesc">{{ t('list-product.price-desc') }}</v-list-item>
         </v-list>
 
-        <v-list class="product-list">
+        <div class="product-list">
           <v-card
             class="ma-4"
             height="400"
@@ -64,7 +64,7 @@
               </div>
             </div>
           </v-card>
-        </v-list>
+        </div>
       </div>
     </div>
   </v-container>
