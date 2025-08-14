@@ -12,9 +12,9 @@ import router from './router'
 import 'vuetify/styles';
 import '@mdi/font/css/materialdesignicons.css';
 
-import Toast from 'vue-toastification' // alert
+// alert
+import Toast from 'vue-toastification'
 import 'vue-toastification/dist/index.css'
-
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 

@@ -4,7 +4,8 @@
     <h2 class="bold-text">{{ t('cart.cart') }}</h2>
     <div class="product-cart" style="height: 45px">
       <v-checkbox
-        v-model="selectAll"
+        v-model="checkboxALl"
+        @change="selectAll"
       ></v-checkbox>
 
     </div>
@@ -109,10 +110,12 @@ import debounce from 'lodash/debounce';
 import {ElMessage} from 'element-plus';
 import router from '@/router'
 import { useCartStore } from '@/stores/cartStore'
+import { useToast } from 'vue-toastification'
 
+const toast = useToast()
 const { t } = useI18n()
 const cart = ref<Cart[]>([])
-const selectAll = ref(false)
+const checkboxALl = ref(false)
 const selectedIds = ref<number[]>([])
 const cartStore = useCartStore()
 
@@ -162,13 +165,6 @@ function toggleSelectItem(productDetailId:number) {
 
 const isSelected = (id:number) => selectedIds.value.includes(id)
 
-// watch(selectAll, (val) => {
-//   if (val) {
-//     selectedIds.value = cart.value.map(item => item.productDetailId)
-//   } else {
-//     selectedIds.value = []
-//   }
-// })
 watch(selectedIds, () => {
   cartStore.setSelectedItems(cart.value.filter(item =>
     selectedIds.value.includes(item.productDetailId)
@@ -196,10 +192,20 @@ const goToPayment = () => {
     selectedIds.value.includes(item.productDetailId)
   )
   cartStore.setSelectedItems(selected)
-
+  if(cartStore.totalQuantity === 0){
+    toast.info(" Bạn cần chọn ít nhất một sản phẩm trước khi thanh toán")
+    return;
+  }
   router.push('/payment')
 }
 
+const selectAll = () =>{
+ if(checkboxALl.value ){
+   selectedIds.value = cart.value.map(item => item.productDetailId)
+ }else {
+   selectedIds.value = []
+ }
+}
 onMounted(() => {
    getCart()
 

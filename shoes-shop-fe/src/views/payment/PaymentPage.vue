@@ -156,9 +156,6 @@ const listProvinces = ref<[]>([])
 const listDistricts = ref<[]>([])
 const listCommunes = ref<[]>([])
 const payment = ref(new Payment())
-// const selectedProvinceId = ref<number | null | undefined>(null)
-// const selectedDistrictId = ref<number | null | undefined>(null)
-// const selectedWardId = ref<number | null | undefined>(null)
 const shippingFee = ref<number>(0)
 const isSelectedProvince = ref(false)
 const formatPrice=(price: number) =>{
@@ -190,7 +187,7 @@ const getShippingFee = async () => {
   if (!payment.value.district || !payment.value.commune) return
 
   const payload: ShippingFee = {
-    from_district_id: 1450, // Mã cố định kho xuất phát của bạn
+    from_district_id: 1450, // Mã cố định kho xuất phát của shop
     to_district_id: payment.value.district,
     to_commune_code: payment.value.commune,
     height: 10,
@@ -215,7 +212,7 @@ const getShippingFee = async () => {
 watch(() => payment.value.province, (newVal) => {
   isSelectedProvince.value = newVal !== null && newVal !== undefined
 
-  // Nếu bạn muốn tự động tải huyện khi có tỉnh
+// Auto-load districts when a province is selected
   if (newVal) {
     getDistricts(newVal)
   } else {
@@ -237,7 +234,6 @@ watch(() => payment.value.province, (newVal) => {
 //   }
 // })
 onMounted(() => {
-  console.log("Aaa " + cartStore.selectedCartItems)
    getProvinces()
 })
 </script>
