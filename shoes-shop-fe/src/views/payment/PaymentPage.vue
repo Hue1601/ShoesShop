@@ -21,6 +21,7 @@
             variant="outlined"
             hide-details
             density="compact"
+            @update:model-value="onProvinceChange"
           />
           <div class="input-location">
             <v-select
@@ -34,6 +35,7 @@
               density="compact"
               style="margin-right: 10px"
               :disabled="!isSelectedProvince"
+              @update:model-value="onDistrictChange"
             />
 
             <v-select
@@ -45,7 +47,8 @@
               variant="outlined"
               hide-details
               density="compact"
-              disabled
+              :disabled = "!isSelectedDistrict"
+              @update:model-value="caculationFee"
             />
           </div>
 
@@ -144,7 +147,7 @@
 import Header from '../../components/common/HeaderPage.vue'
 import Footer from '../../components/common/FooterPage.vue'
 import { useCartStore } from '@/stores/cartStore'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import {paymentService} from '@/services/PaymentService.ts'
 import {type ShippingFee} from '@/interface/interface.ts'
 import {Payment} from '@/model/Payment.ts'
@@ -158,6 +161,7 @@ const listCommunes = ref<[]>([])
 const payment = ref(new Payment())
 const shippingFee = ref<number>(0)
 const isSelectedProvince = ref(false)
+const isSelectedDistrict = ref(false)
 const formatPrice=(price: number) =>{
   return Math.round(price).toLocaleString("vi-VN") + " đ"
 }
@@ -179,6 +183,7 @@ const getCommune = async (districtId: number) => {
   const res = await paymentService.getCommune(districtId)
   if (res.code === 200 && Array.isArray(res.data)) {
     listCommunes.value = res.data
+
   }
 }
 
@@ -201,25 +206,50 @@ const getShippingFee = async () => {
     const res = await paymentService.calculateShippingFee(payload)
     if (res.code === 200 && res.data?.total) {
       shippingFee.value = res.data.total
-      console.warn(" vận chuyển:", res.data.total)
-    } else {
-      console.warn("Không lấy được phí vận chuyển:", res)
     }
   } catch (error) {
     console.error("Lỗi lấy phí ship:", error)
   }
 }
-watch(() => payment.value.province, (newVal) => {
-  isSelectedProvince.value = newVal !== null && newVal !== undefined
-
-// Auto-load districts when a province is selected
-  if (newVal) {
-    getDistricts(newVal)
+const onProvinceChange = async (provinceId: number | null) => {
+  if (provinceId) {
+    isSelectedProvince.value = true
+    payment.value.district = null // reset huyện cũ
+    await getDistricts(provinceId)
   } else {
+    isSelectedProvince.value = false
     listDistricts.value = []
     payment.value.district = null
   }
-})
+}
+const onDistrictChange= async (districtId: number | null) => {
+  if (districtId) {
+    isSelectedDistrict .value = true
+    await getCommune(districtId)
+  }
+  else{
+    isSelectedDistrict.value = false
+    listCommunes.value = []
+    payment.value.district = null
+  }
+}
+
+const caculationFee = async (communeId: number | null) => {
+  if (communeId){
+    await getShippingFee()
+  }
+}
+// watch(() => payment.value.province, (newVal) => {
+//   isSelectedProvince.value = newVal !== null && newVal !== undefined
+//
+// // Auto-load districts when a province is selected
+//   if (newVal) {
+//     getDistricts(newVal)
+//   } else {
+//     listDistricts.value = []
+//     payment.value.district = null
+//   }
+// })
 
 //
 // watch(selectedDistrictId, (newVal) => {
