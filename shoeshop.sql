@@ -127,12 +127,12 @@ CategoryID INT FOREIGN KEY REFERENCES Category(ID) ,
  CREATE TABLE Address (
     ID int identity (1,1) primary key,
     AddressDetail NVARCHAR(255),
-    CommuneLabel  NVARCHAR(255),
     CommuneValue Int,
-    DistrictLabel  NVARCHAR(255),
     DistrictValue Int,
-    ProvinceLabel  NVARCHAR(255),
-    ProvinceValue Int
+    ProvinceValue Int,
+	ReceiverName NVARCHAR(100) NOT NULL,
+    ReceiverPhone NVARCHAR(20) NOT NULL,
+	IsDefault BIT DEFAULT 0,
 )
 
 CREATE TABLE Voucher(
@@ -157,4 +157,5 @@ CREATE TABLE Emails (
     CreatedAt DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (UserID) REFERENCES Users(ID)
 );
+
 
