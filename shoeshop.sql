@@ -148,3 +148,12 @@ CREATE TABLE Voucher(
     Type int,
     Value DECIMAL(18,2)
 )
+--This table is used to store the list of emails registered to receive promotional information and special offers from the system
+CREATE TABLE Emails (
+    ID INT AUTO_INCREMENT PRIMARY KEY,
+    UserID INT NULL, -- Cho phép null để hỗ trợ khách vãng lai
+    Email NVARCHAR(100) NOT NULL,
+    IsActive BIT DEFAULT 1,
+    CreatedAt DATETIME DEFAULT GETDATE(),
+    FOREIGN KEY (UserID) REFERENCES Users(ID)
+);
