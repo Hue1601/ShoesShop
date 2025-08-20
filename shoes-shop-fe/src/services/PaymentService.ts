@@ -23,5 +23,9 @@ class PaymentService{
     const response = await axios.post(`${this.baseURL}/shipping-fee`, body);
     return response.data;
   }
+  async saveEmail(body:any){
+    const saveEmail = await axios.post(`${this.baseURL}/email`,body)
+    return saveEmail;
+  }
 }
 export const paymentService = new PaymentService();

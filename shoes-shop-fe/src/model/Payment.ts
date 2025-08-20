@@ -8,7 +8,6 @@ export class Payment {
   public amountPaid?: number = undefined;
   public commune?: null = null;
   public district?: null = null  ;
-
   public province?: null = null ;
 
 

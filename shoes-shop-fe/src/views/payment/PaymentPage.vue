@@ -6,7 +6,7 @@
         <v-sheet>
           <h2 class="bold-text">Thông tin liên lạc</h2>
           <v-text-field label="Email" variant="outlined" hide-details density="compact" v-model="payment.buyerEmail"/>
-          <v-checkbox label="Gửi email cho tôi tin tức và ưu đãi qua mail" hide-details />
+          <v-checkbox label="Gửi email cho tôi tin tức và ưu đãi qua mail" hide-details @click="isSaveEmail = true"/>
         </v-sheet>
 
         <v-sheet>
@@ -48,7 +48,7 @@
               hide-details
               density="compact"
               :disabled = "!isSelectedDistrict"
-              @update:model-value="caculationFee"
+              @update:model-value="calculationFee"
             />
           </div>
 
@@ -93,7 +93,7 @@
             hide-details
           />
         </v-sheet>
-        <v-btn class="btn">THANH TOÁN NGAY</v-btn>
+        <v-btn class="btn" @click="pay">THANH TOÁN NGAY</v-btn>
       </v-col>
       <v-col cols="5" class="show-info-order">
 
@@ -149,7 +149,7 @@ import Footer from '../../components/common/FooterPage.vue'
 import { useCartStore } from '@/stores/cartStore'
 import { onMounted, ref } from 'vue'
 import {paymentService} from '@/services/PaymentService.ts'
-import {type ShippingFee} from '@/interface/interface.ts'
+import {type ShippingFee, type Email} from '@/interface/interface.ts'
 import {Payment} from '@/model/Payment.ts'
 
 const cartStore = useCartStore()
@@ -162,6 +162,7 @@ const payment = ref(new Payment())
 const shippingFee = ref<number>(0)
 const isSelectedProvince = ref(false)
 const isSelectedDistrict = ref(false)
+const isSaveEmail = ref(false)
 const formatPrice=(price: number) =>{
   return Math.round(price).toLocaleString("vi-VN") + " đ"
 }
@@ -234,35 +235,21 @@ const onDistrictChange= async (districtId: number | null) => {
   }
 }
 
-const caculationFee = async (communeId: number | null) => {
+const calculationFee = async (communeId: number | null) => {
   if (communeId){
     await getShippingFee()
   }
 }
-// watch(() => payment.value.province, (newVal) => {
-//   isSelectedProvince.value = newVal !== null && newVal !== undefined
-//
-// // Auto-load districts when a province is selected
-//   if (newVal) {
-//     getDistricts(newVal)
-//   } else {
-//     listDistricts.value = []
-//     payment.value.district = null
-//   }
-// })
-
-//
-// watch(selectedDistrictId, (newVal) => {
-//   if (newVal) {
-//     getCommune(newVal)
-//     selectedWardId.value = null
-//   }
-// })
-// watch([selectedDistrictId, selectedWardId], ([district, ward]) => {
-//   if (district && ward) {
-//     getShippingFee()
-//   }
-// })
+const pay = async () =>{
+    if(isSaveEmail.value === true){
+      console.log("save")
+      const payload : Email = {
+        email: payment.value.buyerEmail
+      }
+      await paymentService.saveEmail(payload)
+    }
+  // await paymentService.payment(payment.value)
+}
 onMounted(() => {
    getProvinces()
 })

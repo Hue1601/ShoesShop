@@ -70,6 +70,10 @@ export interface ShippingFee{
   insurance_value:number
 }
 
+export interface Email{
+  email: string
+}
+
 
 
 

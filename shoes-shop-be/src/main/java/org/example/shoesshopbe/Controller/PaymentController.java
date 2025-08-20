@@ -1,8 +1,13 @@
 package org.example.shoesshopbe.Controller;
 
+import org.example.shoesshopbe.Model.Emails;
 import org.example.shoesshopbe.Request.AvailableServiceRequest;
+import org.example.shoesshopbe.Request.AddressRequest;
 import org.example.shoesshopbe.Request.PaymentRequest;
 import org.example.shoesshopbe.Response.AvailableServiceResponse;
+import org.example.shoesshopbe.Service.PaymentService;
+import org.example.shoesshopbe.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +22,10 @@ import java.util.Map;
 public class PaymentController {
     @Value("${ghn.token}")
     private String token;
+    @Autowired
+    private UserService userService;
+   @Autowired
+   private PaymentService paymentService;
 
     // RestTemplate là công cụ giúp gửi HTTP request từ Java tới API bên ngoài
     private final RestTemplate restTemplate;
@@ -67,7 +76,7 @@ public class PaymentController {
     }
 
     @PostMapping("/shipping-fee")
-    public ResponseEntity<?> calculateShippingFee(@RequestBody PaymentRequest paymentRequest) {
+    public ResponseEntity<?> calculateShippingFee(@RequestBody AddressRequest addressRequest) {
         HttpHeaders headers = getHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -77,8 +86,8 @@ public class PaymentController {
 //      //Tạo request object gửi lên GHN để tra các dịch vụ phù hợp từ quận A → quận B.
         AvailableServiceRequest serviceReq = new AvailableServiceRequest(
                 shopId,
-                paymentRequest.getFrom_district_id(),
-                paymentRequest.getTo_district_id()
+                addressRequest.getFrom_district_id(),
+                addressRequest.getTo_district_id()
         );
 
         HttpEntity<AvailableServiceRequest> serviceEntity = new HttpEntity<>(serviceReq, headers);
@@ -102,14 +111,14 @@ public class PaymentController {
 
         // 2. Chuẩn bị payload cho API /fee
         Map<String, Object> feePayload = new HashMap<>();
-        feePayload.put("from_district_id", paymentRequest.getFrom_district_id());
-        feePayload.put("to_district_id", paymentRequest.getTo_district_id());
-        feePayload.put("to_ward_code", String.valueOf(paymentRequest.getTo_commune_code()));
-        feePayload.put("height", paymentRequest.getHeight());
-        feePayload.put("length", paymentRequest.getLength());
-        feePayload.put("weight", paymentRequest.getWeight());
-        feePayload.put("width", paymentRequest.getWidth());
-        feePayload.put("insurance_value", paymentRequest.getInsurance_value());
+        feePayload.put("from_district_id", addressRequest.getFrom_district_id());
+        feePayload.put("to_district_id", addressRequest.getTo_district_id());
+        feePayload.put("to_ward_code", String.valueOf(addressRequest.getTo_commune_code()));
+        feePayload.put("height", addressRequest.getHeight());
+        feePayload.put("length", addressRequest.getLength());
+        feePayload.put("weight", addressRequest.getWeight());
+        feePayload.put("width", addressRequest.getWidth());
+        feePayload.put("insurance_value", addressRequest.getInsurance_value());
         feePayload.put("service_id", serviceId);
         feePayload.put("shop_id", shopId);
 
@@ -118,5 +127,10 @@ public class PaymentController {
         String feeUrl = "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee";
 
         return restTemplate.exchange(feeUrl, HttpMethod.POST, feeEntity, String.class);
+    }
+    @PostMapping("/email")
+    public ResponseEntity<?> payment(@RequestBody Emails email) {
+        paymentService.saveEmail(email);
+        return ResponseEntity.ok("ok");
     }
 }
